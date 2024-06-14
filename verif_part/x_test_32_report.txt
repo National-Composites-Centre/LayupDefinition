@@ -1,0 +1,228 @@
+
+             DESIGN ERRORS: 
+
+             WARNINGS:  
+
+Bolt diameter to laminate thickness ratio (d/t) should be around 1.
+This ratio is 6.666666666666667 at the hole location [210.132105   60.         84.7469815].
+Please adjust this if this hole is used for bolted connection.
+
+
+Bolt diameter to laminate thickness ratio (d/t) should be around 1.
+This ratio is 8.333333333333334 at the hole location [32.66846 30.       0.6    ].
+Please adjust this if this hole is used for bolted connection.
+
+
+Bolt diameter to laminate thickness ratio (d/t) should be around 1.
+This ratio is 8.333333333333334 at the hole location [98.00539 30.       0.6    ].
+Please adjust this if this hole is used for bolted connection.
+
+
+Bolt diameter to laminate thickness ratio (d/t) should be around 1.
+This ratio is 8.333333333333334 at the hole location [98.00539 90.       0.6    ].
+Please adjust this if this hole is used for bolted connection.
+
+
+Bolt diameter to laminate thickness ratio (d/t) should be around 1.
+This ratio is 8.333333333333334 at the hole location [32.66846 90.       0.6    ].
+Please adjust this if this hole is used for bolted connection.
+
+If GRP involved in the stack is over 1mm, check the attenuation charts for your specific frequency used at :https://nationalcompositescentre.sharepoint.com/:b:/s/NCC-CoSinC85/EdLNWUUuXDNLj6UFZSBgDHoB0RAMPedN4cfktxJb563r1Q?e=yAWqAN.
+ 
+
+             SUGGESTED CHECKS: 
+
+ The layup has less than 10 percent 90 degree plies in location delimited by spline: 'Circle.6'.
+To avoid excessive thermal expansion more 90 degree plies should be used.
+
+ The layup has less than 10 percent 90 degree plies in location delimited by spline: Edge of part.
+To avoid excessive thermal expansion more 90 degree plies should be used.
+
+The layup around hole located at [210.132105   60.         84.7469815] has 100% layers oriented  in 0.0 direction. If the structure is mechanically fastened, an excess of 40% of the fibres oriented in any one direction is inadvisable.
+
+
+The layup around hole located at [32.66846 30.       0.6    ] has 100% layers oriented  in 0.0 direction. If the structure is mechanically fastened, an excess of 40% of the fibres oriented in any one direction is inadvisable.
+
+
+ The layup contains group of 4 or more plies grouped together in location delimited by spline: 'Circle.6'.
+This should be avoided.
+
+ The layup contains group of 4 or more plies grouped together in location delimited by spline: Edge of part.
+This should be avoided.
+
+Drop-off at one location should not exceed 0.25mm for unidirectional and 0.38 for woven fabric.The drop-off is 0.30000000000000004mm at Edge of part.
+
+
+Outermost plies should typically be +45° or –45° .
+
+
+              DESIGN CHECK ISSUES: 
+
+Rule 85 not checked due to missing information.
+
+Rule 144 not checked due to DFM tool error.
+
+
+SmartDFM 1.1
+             DESIGN ERRORS: 
+
+             WARNINGS:  
+
+             SUGGESTED CHECKS: 
+
+              DESIGN CHECK ISSUES: 
+
+Rule 35 not checked due to missing information.
+
+Rule 36 not checked due to missing information.
+
+Rule 71 not checked due to missing information.
+
+Rule 83 not checked due to missing information.
+
+Rule 85 not checked due to missing information.
+
+Rule 86 not checked due to missing information.
+
+Rule 91 not checked due to missing information.
+
+Rule 92 not checked due to missing information.
+
+Rule 95 not checked due to missing information.
+
+Rule 128 not checked due to missing information.
+
+Rule 133 not checked due to missing information.
+
+Rule 134 not checked due to missing information.
+
+Rule 135 not checked due to missing information.
+
+Rule 130 not checked due to missing information.
+
+Rule 139 not checked due to missing information.
+
+Rule 144 not checked due to missing information.
+
+Rule 146 not checked due to missing information.
+
+Rule 151 not checked due to missing information.
+
+Rule 166 not checked due to missing information.
+
+Rule 400 not checked due to missing information.
+
+Rule 401 not checked due to missing information.
+
+Rule 402 not checked due to missing information.
+
+
+SmartDFM 1.1
+             DESIGN ERRORS: 
+
+             WARNINGS:  
+
+             SUGGESTED CHECKS: 
+
+              DESIGN CHECK ISSUES: 
+
+Rule 35 not checked due to missing information.
+
+Rule 36 not checked due to missing information.
+
+Rule 71 not checked due to missing information.
+
+Rule 83 not checked due to missing information.
+
+Rule 85 not checked due to missing information.
+
+Rule 86 not checked due to missing information.
+
+Rule 91 not checked due to missing information.
+
+Rule 92 not checked due to missing information.
+
+Rule 95 not checked due to missing information.
+
+Rule 128 not checked due to missing information.
+
+Rule 133 not checked due to missing information.
+
+Rule 134 not checked due to missing information.
+
+Rule 135 not checked due to missing information.
+
+Rule 130 not checked due to missing information.
+
+Rule 139 not checked due to missing information.
+
+Rule 144 not checked due to missing information.
+
+Rule 146 not checked due to missing information.
+
+Rule 151 not checked due to missing information.
+
+Rule 166 not checked due to missing information.
+
+Rule 400 not checked due to missing information.
+
+Rule 401 not checked due to missing information.
+
+Rule 402 not checked due to missing information.
+
+
+SmartDFM 1.1
+             DESIGN ERRORS: 
+
+             WARNINGS:  
+
+             SUGGESTED CHECKS: 
+
+              DESIGN CHECK ISSUES: 
+
+Rule 35 not checked due to missing information.
+
+Rule 36 not checked due to missing information.
+
+Rule 71 not checked due to missing information.
+
+Rule 83 not checked due to missing information.
+
+Rule 85 not checked due to missing information.
+
+Rule 86 not checked due to missing information.
+
+Rule 91 not checked due to missing information.
+
+Rule 92 not checked due to missing information.
+
+Rule 95 not checked due to missing information.
+
+Rule 128 not checked due to missing information.
+
+Rule 133 not checked due to missing information.
+
+Rule 134 not checked due to missing information.
+
+Rule 135 not checked due to missing information.
+
+Rule 130 not checked due to missing information.
+
+Rule 139 not checked due to missing information.
+
+Rule 144 not checked due to missing information.
+
+Rule 146 not checked due to missing information.
+
+Rule 151 not checked due to missing information.
+
+Rule 166 not checked due to missing information.
+
+Rule 400 not checked due to missing information.
+
+Rule 401 not checked due to missing information.
+
+Rule 402 not checked due to missing information.
+
+
+SmartDFM 1.1
