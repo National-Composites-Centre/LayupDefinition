@@ -1,0 +1,5 @@
+﻿,UI,Changes
+1.00,pysimplegui,
+2.00,pysimplegui,
+3.00,Kivy,
+3.10,Kivy,"fixes issues from Kivy transition, materials store properly, checkboxes linked,"

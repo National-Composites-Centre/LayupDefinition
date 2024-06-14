@@ -1,11 +1,11 @@
 [INFO] 
 generated using Python tool version 4.0 
-author: Jakub.Kucera
-generated on: 13/03/2024
+author: jakub.kucera
+generated on: 14/03/2024
  
  
  [PART] 
-C:/code/LayupDefinition/verif_part/x_test_32.txt
+C:/code/LayupDefinition/verif_part/x_test_33.txt
  
 [LAMINATE] 
 [0,0,0,0,0]
@@ -14,13 +14,14 @@ C:/code/LayupDefinition/verif_part/x_test_32.txt
 
 [MATERIALS] 
 uniform
-[made3]
+[made2]
 
 
 [SPLINES] 
  
-Circle.6,closed spline
- 195.315   52.816   65.9215   0.    
+Circle.6,open spline
+   0.       0.       0.       1.    
+ 195.315   52.816   65.9215   1.    
  195.055   54.3337  65.6122   0.    
  194.857   55.8738  65.3764   0.    
  194.722   57.4302  65.2152   0.    
@@ -119,11 +120,12 @@ Circle.6,closed spline
  196.947   47.0867  67.8664   0.    
  196.453   48.4563  67.2776   0.    
  196.015   49.8715  66.7559   0.    
- 195.635   51.3266  66.3033   0.    
+ 195.635   51.3266  66.3033   1.    
 
 ___{end_spline}___
 
 [EDGE SPLINE]
+ 0.00000e+00 0.00000e+00 0.00000e+00 1.00000e+00
  0.00000e+00 8.17602e+00 0.00000e+00 0.00000e+00
  0.00000e+00 1.63520e+01 0.00000e+00 0.00000e+00
  0.00000e+00 2.45281e+01 0.00000e+00 0.00000e+00

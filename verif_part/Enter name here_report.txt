@@ -1,0 +1,63 @@
+
+             DESIGN ERRORS: 
+
+             WARNINGS:  
+
+             SUGGESTED CHECKS: 
+
+              DESIGN CHECK ISSUES: 
+
+Layup file not found, make sure that .txt file with corresponding name is located in specified folder.
+
+Layup file not found, make sure that .txt file with corresponding name is located in specified folder.
+
+Rule 35 not checked due to missing information.
+
+Rule 36 not checked due to missing information.
+
+Rule 71 not checked due to missing information.
+
+Rule 83 not checked due to missing information.
+
+Rule 85 not checked due to missing information.
+
+Rule 86 not checked due to missing information.
+
+Rule 91 not checked due to missing information.
+
+Rule 92 not checked due to missing information.
+
+Rule 95 not checked due to missing information.
+
+Rule 128 not checked due to missing information.
+
+Rule 133 not checked due to missing information.
+
+Layup file not found, make sure that .txt file with corresponding name is located in specified folder.
+
+Rule 134 not checked due to missing information.
+
+Layup file not found, make sure that .txt file with corresponding name is located in specified folder.
+
+Rule 135 not checked due to missing information.
+
+Rule 130 not checked due to missing information.
+
+Rule 139 not checked due to missing information.
+
+Rule 144 not checked due to missing information.
+
+Rule 146 not checked due to missing information.
+
+Rule 151 not checked due to missing information.
+
+Rule 166 not checked due to missing information.
+
+Rule 400 not checked due to missing information.
+
+Rule 401 not checked due to missing information.
+
+Rule 402 not checked due to missing information.
+
+
+SmartDFM 1.1
