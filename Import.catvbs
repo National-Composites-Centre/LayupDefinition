@@ -1,0 +1,9 @@
+Sub CATMain()
+
+dim sh,s
+Set sh = CreateObject("WScript.Shell")
+
+
+s ="D:\ExeLib\LI\layup_CATimport.exe"
+sh.Run s, 1, false
+End Sub 

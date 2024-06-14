@@ -1,0 +1,13 @@
+untitled*
+__pycache__/
+dist*
+other*
+test*
+xxx*
+WS_out/
+WS/
+WS_*
+conversion.py
+edge.py
+temp/
+current_release*
