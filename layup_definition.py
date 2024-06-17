@@ -1,67 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 25 14:34:14 2022
 
-@author: jakub.kucera
-"""
-
-'''
-import kivy
-
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.popup import Popup
-from kivy.properties import StringProperty
-
-def yesno():
-    Builder.load_string('''
-#    <ConfirmPopup>:
-#        cols:1
-#        Label:
-#            text: root.text
-#        GridLayout:
-#            cols: 2
-#            size_hint_y: None
-#            height: '44sp'
-#            Button:
-#                text: 'Yes'
-#                on_release: root.dispatch('on_answer','yes')
-#            Button:
-#                text: 'No'
-#                on_release: root.dispatch('on_answer', 'no')
-''')
-
-    class ConfirmPopup(GridLayout):
-
-        text = StringProperty()
-        
-        def __init__(self,**kwargs):
-            self.register_event_type('on_answer')
-            super(ConfirmPopup,self).__init__(**kwargs)
-            
-        def on_answer(self, *args):
-            pass	
-
-    class ConfirmSave(App):
-        def build(self):
-            content = ConfirmPopup(text="Layup Definition file already exists, continuing will replace the old file.Do you want to Continue?")
-            content.bind(on_answer=self._on_answer)
-            self.popup = Popup(title="Answer Question",
-                                content=content,
-                                size_hint=(None, None),
-                                size=(650,150),
-                                auto_dismiss= False)
-            self.popup.open()
-            
-        def _on_answer(self, instance, answer):
-            print("USER ANSWER: " , repr(answer))
-            self.popup.dismiss()
-		
-    if __name__ == '__main__':
-	    ConfirmPopup().run()
-
-'''
+from jsonic import serialize, deserialize
+import pprint
 
 import win32com.client.dynamic
 import numpy as np
@@ -72,7 +11,7 @@ from vecEX3 import wrmmm
 import os
 from datetime import date
 import math
-from utilities import sharpness
+from utilities import sharpness , clean_json 
 
 #from secondary_UIs import newMat #currently unused cleanup - because of parameter passing issues between UI's in differnt scripts
 #from utilities import sharpness
@@ -95,10 +34,11 @@ from kivy.uix.popup import Popup
 from kivy.lang import Builder
 from kivy.properties import StringProperty
 
-#from LD import Popup
+#from LD STANDARD file
+import stcOBJ
 
 
-version = "3.1"
+version = "4.0"
 
 def pts100(sp,hbs,hs,part1,HSF,partDocument2,dir = False,no_p = 100):
     # Adding new body to part1
@@ -137,7 +77,7 @@ def pts100(sp,hbs,hs,part1,HSF,partDocument2,dir = False,no_p = 100):
     #standard .wrl interogation to obtain point locations
     vec, x = wrmmm(Multi = True)
     #corrects for extra 0,0,0 point
-    #x = np.delete(x,0,axis=0)
+    x = np.delete(x,0,axis=0)
 
     return(x,body1,body2)
 
@@ -179,6 +119,7 @@ def SplinesToClouds(spNames,no_p = 100,CADfile=""):
             selection1.Delete() 
 
             x,body1,body2 = pts100(sp,hbs,hs,part1,HSF,partDocument2,dir=True,no_p = no_p)
+            print("direction reversed") 
 
         #now figure out if spline is closed
         tdist = math.sqrt((x[0,0]-x[98,0])**2+(x[0,1]-x[98,1])**2+(x[0,2]-x[98,2])**2)
@@ -288,20 +229,26 @@ def CLF(self):
         
     no_p = self.no_p #this needs fixing, no idea how to pass variable from ui
 
+    
+
+
     #Upon running the layup generation
     i = 1
     #spline list
     spls = []
     while i < 13:
-        if self.layout.children[40-i*3].text != "":
-            spls.append(self.layout.children[40-i*3].text)
+        if self.layout.children[43-i*3].text != "":
+            spls.append(self.layout.children[43-i*3].text)
         i = i + 1
 
-    i = 1
-    while i < 13:
-        if self.layout.children[39-i*3].text != "":
-            spls.append(self.layout.children[39-i*3].text)
-        i = i + 1
+    #TODO:
+        #IF second spline is to be used,the order of stored splines has to be considred not to interfere with the others
+    #
+    #i = 1
+    #while i < 13:
+    #    if self.layout.children[43-i*3].text != "":
+    #        spls.append(self.layout.children[43-i*3].text)
+    #    i = i + 1
 
     #might have a nicer way to reference than integer... 
     CADfile = self.layout.children[66].text+"\\"+self.layout.children[69].text+".txt"
@@ -320,269 +267,182 @@ def CLF(self):
     edge_points = sharpness(edge_points)
     
     if rrun == True:
-    
+        
+        FL = stcOBJ.CompositeDB()
+
+        #only generate layup def. if no error
+        error = False
+
+        #load material database to select materials from
+        matDatabase = matData(self.layout.children[66].text)
+
         #start constructing the layup .txt file
-        str_def = "[INFO] \n"
-        str_def += "generated using Python tool version "+version+" \n"
-        str_def += "author: " + str(os.getlogin()) +"\n"
+        FL.fileMetadata.layupDefinitionVersion = "4.0"
+        #At initial creation of JSON file last modification and author are the same
+        FL.fileMetadata.lastModifiedBy = str(os.getlogin())
+        FL.fileMetadata.author = str(os.getlogin())
 
         #basic info / header
         today = date.today()
-        d1 = today.strftime("%d/%m/%Y")    
-        str_def += "generated on: " + str(d1)+ "\n \n \n "
+        d1 = today.strftime("%d/%m/%Y")
+        FL.fileMetadata.lastModified = str(d1)
         
-        #cad reference file
-        str_def += "[PART] \n"
-        str_def += CADfile +"\n \n"
+        #cad reference file"
+        FL.fileMetadata.cadFile = self.layout.children[69].text
+        FL.fileMetadata.cadFilePath = self.layout.children[66].text
+
+        #check and initiate geometry
+        if FL.allGeometry == None:
+            FL.allGeometry = []
+
+        noG = len(FL.allGeometry)
+
+        sp_temp_points = []
+        
+        #delimiting spline ref
+        for ii, pt in enumerate(edge_points[:,0]):
+                sp_temp_points.append(stcOBJ.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
+        FL.allGeometry.append(stcOBJ.Spline(points=sp_temp_points, memberName = "edge"))
+        spline_refs = [noG]
+        noG = noG + 1
+
+        print("spls",spls)
+        #Save reference splines
+        for i,spl in enumerate(spls):
+            #turn points into point classes
+            sp_temp_points = []
+            #pickr corresponding point matrix
+            mx = mat_list[i]
+            for ii, pt in enumerate(mx[:,0]):
+                sp_temp_points.append(stcOBJ.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
+
+            FL.allGeometry.append(stcOBJ.Spline(points=sp_temp_points, memberName = spl))
+            spline_refs.append(noG)
+            print("NOG", noG)
+            print("sp", spl)
+            noG = noG + 1
+
+
         #the layup itself
-        str_def += "[LAMINATE] \n"
-        str_def += str(self.layout.children[60].text)+"\n"
+        seq = str(self.layout.children[60].text)
+        seq = seq.split("[")[1]
+        seq = seq.split("]")[0]
+
         
-        #preparing to loop through layers, to define drop-offs
-        lam = self.layout.children[60].text
-        cnt_l = lam.count(",")+1
-        
-        #on default all drop-off denoted as "f", full surface used
-        i = 0
-        sp_ref = []
-        while i < cnt_l:
-            sp_ref.append("f")
-            i = i + 1
-        
-        i = 1
-        error = False
-        transitional_splines = False
-        assigned = []
-        while i < 13:
-            #38 onwards are the drop-off indicating integers 
-            if self.layout.children[38-i*3].text != "":
-                tv = self.layout.children[38-i*3].text
-                ii = 0
-                cnt = tv.count(",")
-                while ii < cnt+1:
-                    tvx = int(tv.split(",")[ii])
-                    
-                    loc_sp = self.layout.children[40-i*3].text
-                    #checking the layer number fits within the total layup listed
-                    if tvx > cnt_l:
-                        content=Button(text="layer "+str(tvx)+" is not listed above. Please adjust your definition.")
-                        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
-                        content.bind(on_press=popup.dismiss)
-                        popup.open()
-                        error = True
-                    else:
-                        #check that no layer is dropped-off twice
-                        if tvx in assigned:
-                            content=Button(text="layer "+str(tvx)+" is assigned to multiple limits. Please adjust your definition.")
+        FL.allGeometry.append(stcOBJ.Sequence())
+        #initiate material database 
+        if FL.allMaterials == None:
+            FL.allMaterials = []
+        gc = len(FL.allGeometry)
+
+        refG = FL.allGeometry[gc-1]
+        refG.plies = []
+        #loop throug plies
+
+        #list of stored materials
+        stored_mat = []
+        for i, s in enumerate(seq.split(",")[:]):
+            if self.layout.children[57].active == True:
+                mat = self.layout.children[56].text
+            else:
+                mat = self.layout.children[56].text.split(",")[i]
+
+            #find if dropped off
+            dropped = False
+            cc = 38
+            drop = self.layout.children[cc].text
+            d_ref = 0
+            while drop != "":
+                for dr in drop.split(",")[:]:
+                    if dr == (i-1):
+                        if dropped == True:
+                            content=Button(text="At least one layer is dropped-off twice. Please fix to proceed.")
                             popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
                             content.bind(on_press=popup.dismiss)
                             popup.open()
                             error = True
                         else:
-                            if self.layout.children[39-i*3].text == "":
-                                sp_ref[tvx-1] = loc_sp
-                                assigned.append(tvx)
+                            dropped == True
+                            #find which spline corresponds to drop-off
+                            if cc == 0:
+                                d_ref = 0
                             else:
-                                #this else exists for the purposes of 2-spline delimitation
+                                d_ref = (cc-38)/-3
+                cc = cc - 3
+                drop = self.layout.children[cc].text
 
-                                #the below replaces spline by composite spline name
-                                #this name will required additional spline creation based on this 
-                                sp_ref[tvx-1] = loc_sp+"+++"+self.layout.children[39-i*3].text+"+++"+str(tvx)
-                                assigned.append(tvx)
-                                #to get additional splines later
-                                transitional_splines = True
-                    ii = ii + 1
-            i = i + 1
+            #only assumed one piece per ply atm
+            #if dropped == True:
+            #    print(d_ref)
 
-        #below if function exists for the purposes of 2-spline delimitation
-        #different mechanism might need to be considered - large layup-files will come of this!
-        if transitional_splines == True:
-            done = []
-            for s in sp_ref:
-                #if composite spline
-                if ("+++" in s) and (s not in done):
-                    #find the releveant splines and points
-                    for i, s2 in enumerate(spls):
-                        if s2 == s.split("+++")[0]:
-                            sp1 = s2
-                            pts1 = mat_list[i]
-                            cls1 = close_list[i]
-                            
-                    for ii, s3 in enumerate(spls):
-                        if s3 == s.split("+++")[1]:
-                            sp2 = s3
-                            pts2 = mat_list[ii]
-                            cls2 = close_list[ii]
-                            
-                    #find nearest points to each other
-                    mind = 99999999
-                    for i, p1 in enumerate(pts1[:,0]):
-                        for ii, p2 in enumerate(pts2[:,0]):
-                            d = math.sqrt((pts1[i,0]-pts2[ii,0])**2+(pts1[i,1]-pts2[ii,1])**2+(pts1[i,2]-pts2[ii,2])**2)
-                            if d < mind:
-                                mind = d
-                                p1_ref = i
-                                p2_ref = ii
 
-                    #TO RESOLVE:
-                    #here also check that splines go in the same circular direction  (by nearest next point...)
+            pic = stcOBJ.Piece(splineRelimitation = spline_refs[d_ref])
 
-                    #how many times this combination of splines
-                    cnt = []
-                    for s2 in sp_ref:
-                        if "+++" in s2:
-                            if (s.split("+++")[1] == s2.split("+++")[1]) and (s.split("+++")[0] == s2.split("+++")[0]):
-                                #careful, what if the order of reference changes?
-                                cnt.append(s2)
+            #create piece delimited by correct spline 
+            
+            refG.plies.append(stcOBJ.Ply(orientation=s,material=mat,cutPieces=[pic]))
+            #store material
+            print("stored mat",stored_mat)
+            if mat not in stored_mat:
+                for m in matDatabase:
+                    print(m.materialName,mat)
+                    if mat == m.materialName:
+                        FL.allMaterials.append(m)
 
-                    #prep empty matrices
-                    l_sp = []
-                    for c in cnt:
-                        l_sp.append(np.asarray([[0,0,0,0]]))
-
-                    #check splines are same type closed/open or break generation
-                    if cls1 != cls2:
-                        content=Button(text="To splines specified for delimitation, but one is closed and one open spline.")
-                        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
-                        content.bind(on_press=popup.dismiss)
-                        popup.open()
-                        error = True
-                        break
-                        
-                    iii = 0
-                    i = p1_ref
-                    ii = p2_ref
-
-                    #go throgh all points and collect intermediate points for the spline in question
-                    while iii < no_p:
-                        #if splines have diffferent sizes one, point cloud will trail behind the other
-                        #This minimizes the issue by skipping points when next one creates shorter link
-                        d_main = math.sqrt((pts1[i,0]-pts2[ii,0])**2+(pts1[i,1]-pts2[ii,1])**2+(pts1[i,2]-pts2[ii,2])**2) 
-                        #if i != 99:
-                        #    d_1dif = math.sqrt((pts1[i+1,0]-pts2[ii,0])**2+(pts1[i+1,1]-pts2[ii,1])**2+(pts1[i+1,2]-pts2[ii,2])**2) 
-                        #else:
-                        #    d_1dif = math.sqrt((pts1[0,0]-pts2[ii,0])**2+(pts1[0,1]-pts2[ii,1])**2+(pts1[0,2]-pts2[ii,2])**2) 
-                        #if ii != 99:
-                        #    d_2dif = math.sqrt((pts1[i,0]-pts2[ii+1,0])**2+(pts1[i,1]-pts2[ii+1,1])**2+(pts1[i,2]-pts2[ii+1,2])**2) 
-                        #else:
-                        #    d_2dif = math.sqrt((pts1[i,0]-pts2[0,0])**2+(pts1[i,1]-pts2[0,1])**2+(pts1[i,2]-pts2[0,2])**2)                                 
-
-                        '''
-                        #shift link if applicable
-                        if d_main > d_1dif:
-                            if i == 99:
-                                i = 0
-                            else:
-                                i += 1
-                            iii += 1
-                        elif d_main > d_2dif:
-                            if ii == 99:
-                                ii = 0
-                            else:
-                                ii += 1
-                            iii += 1
-                        '''
-
-                        #create points to add to sp_ref  -- add point cloudes to mat_list -- same order as splines!
-                        xdif = -pts1[i,0]+pts2[ii,0]
-                        ydif = -pts1[i,1]+pts2[ii,1]
-                        zdif = -pts1[i,2]+pts2[ii,2]
-
-                        #create links between each of the 100 points
-                        #for efficiency all intermediate splines between 2 specific main splines done here
-                        for iv, c in enumerate(cnt):
-                            #based on number of plies in this location split these vectors proportionally
-                            x_loc = iv*(xdif/len(cnt))+pts1[i,0]
-                            y_loc = iv*(ydif/len(cnt))+pts1[i,1]
-                            z_loc = iv*(zdif/len(cnt))+pts1[i,2]
-
-                            l_sp[iv] = np.concatenate((l_sp[iv],np.asarray([[x_loc,y_loc,z_loc,0]])),axis = 0)
-
-                        #working with hundred points but possibly with different starting locations
-                        if i == no_p-1:
-                            i = 0
-                        else:
-                            i += 1
-                        if ii == no_p-1:
-                            ii = 0
-                        else:
-                            ii += 1
-                        iii = iii + 1      
-
-                    for iv, c in enumerate(cnt):
-                        #delete first line of each matrix  
-                        l_sp[iv] = np.delete(l_sp[iv],0,axis=0)
-                        #append reference to spls
-                        spls.append(c)
-                        #append points to mat_list
-                        mat_list.append(l_sp[iv])
-                        #done.append.. ... the full spline to avoid dupe
-                        close_list.append(cls1)
-                        done.append(c)
+                #preventing re-storing of material
+                stored_mat.append(mat)
 
         #only finish layup definition if no errors have been trigered
         if error != True:
-            #spline reference list
-            sp_ref = str(sp_ref)
-            sp_ref = sp_ref.replace(" ","")
-            str_def += str(sp_ref) + "\n \n"
-
-            if self.str_sd != "":
-                str_def += self.str_sd
-
-            #This requires an option for mixed materials. 
-            str_def += "\n[MATERIALS] \n"
-            if self.layout.children[57].active == True:
-                str_def += "Uniform material\n"
-            if self.layout.children[54].active == True:
-                str_def += "Variable material"
-
-            str_def += "["+self.layout.children[56].text+"]\n\n"
-            
-            str_def += "\n[SPLINES] \n \n"
-            
-            #points for each spline
-            for i, sp in enumerate(spls):
-                str_def += sp +","+str(close_list[i])+"\n"
-                
-                tt = str(mat_list[i])
-                #tt = np.array(map(str, mat_list[i]))
-                #array(['0', '33', '4444522'], dtype='|S7')
-                tt = tt.replace("[["," ")
-                tt = tt.replace("[","")
-                tt = tt.replace("]","")    
-                str_def += str(tt) + "\n\n___{end_spline}___\n\n"
-            
-            #edge spline
-            str_def += "[EDGE SPLINE]"+"\n"
-            ep = str(edge_points)
-            #ep = np.array(map(str, edge_points))
-            tt = ep.replace("[["," ")
-            tt = tt.replace("[","")
-            tt = tt.replace("]","") 
-            str_def += str(tt) + "\n\n___{end_edge_spline}___\n\n"
-            #add sharpness of points as 4th dimension? to disconect splines?
-            
-            txt_file = CADfile.replace(".CatPart","_layup.txt")
+            txt_file = CADfile.replace(".CatPart","_layup.json")
+            txt_file = txt_file.replace(".txt","_layup.json")
             
             #if file exists, check that user is ok with over-write
             if os.path.isfile(txt_file):
-                ch = "Yes" #yesno()
-                print("ch",ch)
+                
+                #Kivy is horrible with pop-ups, so dedicated Tkinter question
+                import tkinter as tk
+                
+                root = tk.Tk()
+                frame = tk.Frame()
+                frame.pack(fill=tk.BOTH, expand=True)
 
-                if str(ch) == "Yes":
-                    with open(txt_file, "w") as text_file:
-                        text_file.write(str_def)
+                result = "no"
+                
+                def clickButton1():
+                    json_str = serialize(FL, string_output = True)
+                    json_str = clean_json(json_str)
+
+                    #save as file
+                    with open(txt_file, 'w') as out_file:
+                        out_file.write(json_str)
 
                     content=Button(text="Layup file has been created, stored as: \n"+str(txt_file)+"\n [Click to close pop-up]")
                     popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
                     content.bind(on_press=popup.dismiss)
                     popup.open()
+                    root.destroy()
+                
+                def clickButton2():
+                    root.destroy()
+
+                
+                label = tk.Label(frame, text = "Corresponding file already exists, do you want it replaced?")
+                button1 = tk.Button(frame, text="Yes", command=clickButton1)
+                button2 = tk.Button(frame, text="No", command=clickButton2)
+                label.pack()
+                button1.pack()
+                button2.pack()
+                root.mainloop()       
 
             else:
-                print(txt_file)
-                with open(txt_file, "a") as text_file:
-                    text_file.write(str_def)
+                json_str = serialize(FL, string_output = True)
+                #json_str = pprint.pformat(json_str,indent=2).replace("'",'"')
+                json_str = clean_json(json_str)
+
+                #save as file
+                with open(txt_file, 'w') as out_file:
+                    out_file.write(json_str)
 
                 content=Button(text="Layup file has been created, stored as: \n"+str(txt_file)+"\n [Click to close pop-up]")
                 popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
@@ -654,31 +514,66 @@ def sp2(self,obj):
 def select1(self,obj):
     print("no")
 
-def MatSel(location):
-            
-        
-    lf3 = "LD_layup_database.txt"
+def matData(location):
+    lf3 = "LD_layup_database"
+    s = []
+
     try:
+        with open(location+"\\"+lf3+".json", "r") as in_file:
+            json_str= in_file.read()
 
-        with open(location+"\\"+lf3, "r") as text_file:
-
-            seznam = []
-            for i ,line in enumerate(text_file.readlines()):
-                if line.count(",") > 0 and i != 0:
-                    #print("yes")
-                    m_ref = line.split(",")[1]
-                    seznam.append(m_ref)
+            D = deserialize(json_str,string_input=True)
+            s = D.allMaterials
     except:
+        print("no JSON material database found")
+        pass
+    return(s)
 
-        content=Button(text="Material database file was not found in the location specified.\n"
-                    +"Therefore an empty materil file has been created, but needs to be populated.")
-        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(0.5, 0.2))
-        content.bind(on_press=popup.dismiss)
-        popup.open()
-        with open(location+"\\"+lf3, 'w') as f:
-            f.write("id,Material_name,	E1,	E2,	G12, G23,	v12,"
-                    +"	Info_source,	layer_thickness,	density,	perme_coeff, type")
-        seznam = ["no material available"]
+def MatSel(location):
+    #retreive the names of available materials 
+    
+    #first check JSON database available
+            
+    #if JSON not available, check for .txt database available
+    lf3 = "LD_layup_database"
+    seznam = []
+
+    try:
+        with open(location+"\\"+lf3+".json", "r") as in_file:
+            json_str= in_file.read()
+
+            D = deserialize(json_str,string_input=True)
+            
+            for i ,material in enumerate(D.allMaterials):
+                seznam.append(material.materialName)
+    except:
+        print("no JSON material database")
+        pass
+    
+    if seznam == []:
+        try:
+
+            with open(location+"\\"+lf3+".txt", "r") as text_file:
+
+                seznam = []
+                for i ,line in enumerate(text_file.readlines()):
+                    if line.count(",") > 0 and i != 0:
+                        #print("yes")
+                        m_ref = line.split(",")[1]
+                        seznam.append(m_ref)
+        except:
+            #if neither database is available, create a .txt one empty
+            content=Button(text="Material database file was not found in the location specified.\n"
+                        +"Therefore an empty materil file has been created, but needs to be populated.")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(0.5, 0.2))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
+            with open(location+"\\"+lf3+"txt", 'w') as f:
+                f.write("id,Material_name,	E1,	E2,	G12, G23,	v12,"
+                        +"	Info_source,	layer_thickness,	density,	perme_coeff, type")
+            seznam = ["no material available"]
 
     return(seznam)
 
+
+    
