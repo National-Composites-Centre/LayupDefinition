@@ -29,6 +29,12 @@ from layup_definition import AddMat, sp1, sp2, CLF, MatSel
 import os
 
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.popup import Popup
+
+#tkinter used for pop-ups rn, as kivy is not good with those
+import tkinter.messagebox
+
+
 
 def on_checkbox_active(checkbox, value):
     print(checkbox)
@@ -104,14 +110,19 @@ class LayupDefinitionApp(App):
         z_dir = ""
         self.str_sd = ""
 
-        #try: 
-        CATIA = win32com.client.Dispatch("CATIA.Application")
-        partDocument2 = CATIA.ActiveDocument
-        cat_name = CATIA.ActiveDocument.Name
-        cat_name = cat_name.split(".CATPart")[0]
+        try: 
+            CATIA = win32com.client.Dispatch("CATIA.Application")
+            partDocument2 = CATIA.ActiveDocument
+            cat_name = CATIA.ActiveDocument.Name
+            cat_name = cat_name.split(".CATPart")[0]
 
-        #except:
-        #    cat_name = ""
+        except:
+
+            tkinter.messagebox.showwarning(title="error",message="Please open CATIA and appropriate file first."\
+                                +" Make sure all other instances of CATIA are now closed"\
+                                     +" (One was likely opened in background right now).")
+            sys.exit()
+
             
         version = "3.2" #3+ is after Kivy transition
 

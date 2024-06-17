@@ -5,9 +5,7 @@ import math
 
 
 def sharpness(mat_list):
-    print("mat_list")
-    print(mat_list)
-
+    
     w = np.size(mat_list,1)
     l = np.size(mat_list,0)
 
@@ -53,7 +51,30 @@ def sharpness(mat_list):
 
     return(mat_list_p)
 
+def clean_json(strin):
+    #strin = input json string to clean
+    s = strin.replace("{","\n{\n")
+    s = s.replace("}","\n}\n")
 
+
+    tabs = 0
+    new_str = ""
+    for line in s.split("\n")[:]:
+        
+        if "}" in line:
+            tabs = tabs - 1
+
+        for ii in range(0,tabs):
+            new_str += "   "
+        new_str += line+"\n"
+
+        if "{" in line:
+            tabs = tabs + 1
+
+
+    #print(new_str)
+
+    return(new_str)
 
 
 #test
@@ -61,3 +82,14 @@ def sharpness(mat_list):
 #mat_list = np.asarray([[1,2,3],[1,3,3],[1,4,3],[1,5,3],[3,5,3]])
 #test = sharpness(mat_list)
 #print(test)
+
+#test clean_json
+
+
+'''
+with open("D:\\CAD_library_sampling\\TestCad_SmartDFM\\X\\x_test_128.txt","r") as X:
+    jstr = str(X.read())
+    #print(jstr)
+    clean_json(jstr)
+
+'''

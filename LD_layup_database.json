@@ -1,0 +1,73 @@
+
+{
+   "name": "test", "rootElements": null, "allEvents": null, "allGeometry": null, "allStages": null, "allMaterials": [
+   {
+      "materialName": "Material_name", "E1": "\tE1", "E2": "\tE2", "G12": "\tG12", "G23": " G23", "v12": "\tv12", "infoSource": "\tInfo_source", "thickness": "\tlayer_thickness", "density": "\tdensity", "permeability": "\tperme_coeff", "type": " type\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "AKSAca A-42", "E1": "\t239500.000", "E2": "\t13400.000", "G12": "\t6810.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tC.Wang", "thickness": "\t0.20000000", "density": "\t0.00000000176000", "permeability": "\t8.2E-13", "type": "\tCFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made1", "E1": "\t200000.000", "E2": "\t12000.000", "G12": "\t6000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.30000000", "density": "\t0.00000000230000", "permeability": "\t8.2E-13", "type": " CFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made2", "E1": "\t200000.000", "E2": "\t10000.000", "G12": "\t5900.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.25000000", "density": "\t0.00000000110000", "permeability": "\t8E-13", "type": " GFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made3", "E1": "\t190000.000", "E2": "\t10000.000", "G12": "\t6000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.30000000", "density": "\t0.00000000200000", "permeability": "\t8E-13", "type": " GFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made4", "E1": "\t180000.000", "E2": "\t10000.000", "G12": "\t5200.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.22000000", "density": "\t0.00000000210000", "permeability": "\t8E-13", "type": " GFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made5", "E1": "\t189900.000", "E2": "\t11000.000", "G12": "\t4000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.25000000", "density": "\t0.00000000150000", "permeability": "\t8E-13", "type": " CFRP\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made6", "E1": "\t210000.000", "E2": "\t14000.000", "G12": "\t7000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.20000000", "density": "\t0.00000000160000", "permeability": "\t8E-13", "type": " NA\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made7", "E1": "\t210000.000", "E2": "\t14000.000", "G12": "\t6500.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.21000000", "density": "\t0.00000000180000", "permeability": "\t8E-13", "type": " NA\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made8", "E1": "\t224999.000", "E2": "\t15000.000", "G12": "\t6400.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.20000000", "density": "\t0.00000000300000", "permeability": "\t8E-13", "type": " kevlar\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made9", "E1": "\t240000.000", "E2": "\t16000.000", "G12": "\t5400.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.29000000", "density": "\t0.00000000160000", "permeability": "\t8E-13", "type": "\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made10", "E1": "\t250000.000", "E2": "\t15000.000", "G12": "\t6000.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.27000000", "density": "\t0.00000000180000", "permeability": "\t8E-13", "type": "\n", "_serialized_type": "stcOBJ.Material"
+   }
+   , 
+   {
+      "materialName": "made11", "E1": "\t250000.000", "E2": "\t12000.000", "G12": "\t5000.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.22000000", "density": "\t0.00000000179000", "permeability": "\t8E-13", "type": "", "_serialized_type": "stcOBJ.Material"
+   }
+   ], "allAxisSystems": 
+   {
+      "default": 
+      {
+         "pt": 
+         {
+            "x": null, "y": null, "z": null, "_serialized_type": "stcOBJ.Point"
+         }
+         , "v1x": 1, "v1y": 0, "v1z": 0, "v2x": 0, "v2y": 1, "v2z": 0, "v3x": 0, "v3y": 0, "v3z": 1, "memberName": null, "_serialized_type": "stcOBJ.axisSystem"
+      }
+      
+   }
+   , "fileMetadata": 
+   {
+      "lastModified": null, "lastModifiedBy": null, "author": null, "version": "1.2", "layupDefinitionVersion": null, "cadFile": null, "cadFilePath": null, "_serialized_type": "stcOBJ.FileMetadata"
+   }
+   , "_serialized_type": "stcOBJ.CompositeDB"
+}
+
