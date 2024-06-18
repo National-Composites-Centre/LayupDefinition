@@ -1,0 +1,159 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>User Guide &#8212; Layup Definition 4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Modules" href="Modules.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Modules.html" title="Modules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Layup Definition 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User Guide</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading">¶</a></h1>
+<img alt="_images/Fig2.png" src="_images/Fig2.png" />
+<p>The layup definition (LD) user guide follows the numbering on Figure 2. Red boxes highlight the use of the LD too. The purple boxes highlight how the same action reflect in an example .txt layup definition file.</p>
+<ol class="arabic">
+<li><p>Setup (eventually author aims to automate this step)</p>
+<blockquote>
+<div><ul>
+<li><p>None NCC users</p>
+<blockquote>
+<div><p>Currently full packaged executable is not available for external users. Therefore cloning of this library is required.</p>
+<p>Then user can then run python script layup_definition.py in their local Python installation. For simplcity backup_env.yml should be used to build local Python environment.</p>
+<p>Alternatively, user can generate .exe file from layup_definitin.py after library has been cloned and environment was set-up. This can be done by for example library called pyinstaller. This will allow the user to follow the steps below for NCC user and integrate this tool with CATIA.</p>
+</div></blockquote>
+</li>
+<li><p>NCC users</p>
+<blockquote>
+<div><p>Download the following from <a class="reference external" href="https://dev.azure.com/NCCDevOps/NCC%20General/_git/LD">https://dev.azure.com/NCCDevOps/NCC%20General/_git/LD</a> : InitExe.catvbs , Import.catvbs, “current release” folder containing two zipped files.</p>
+<p>Unzip the two release files in an empty repository. Avoid cloud storage and “downloads”.</p>
+<p>For convenience of use the author recommends binding the LD tool to Catia toolbar. This youtube video describes how to bind a macro to a button in Catia:  <a class="reference external" href="https://www.youtube.com/watch?v=BNAGviNNF88">https://www.youtube.com/watch?v=BNAGviNNF88</a>
+The short macro that initiates the Python script is available in the repository: “InitExe.catvbs”. It is important to open the “InitExe.catvbs” and adjust the path to the Python script to current explicit location. The path should point to layup_definition.exe which is provided in “current release” folder, the files under “current release” need to be unzipped, but can be placed anywhere on users PC, provided path can be specified in CATIA. Similarly, to bind the Catia macro inside Catia successfully, it is recommended to move the “InitExe.catvbs” to your default Catia macro location. Alternatively any folder can be added to CATIA library in: Tools ==&gt; macro ==&gt; Macros. Same process can be followed to implement importing function/button with Import.catvbs.</p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Successful setup of Catia macro should allow for the “Layup Definition” window to display upon the button press.</p></li>
+<li><p>“Layup file name” field has to be the same as the Catia part name, or equivalent. If part is opened prior to initiation of the layup definition, the part should be automatically filled.</p></li>
+<li><p>“Location” points the LD to your working directory, must contain the CatPart and should contain version of “LD_layup_database.txt”. More details on that file below.</p></li>
+<li><p>Example sequence, to be used in 6. Not the starting and ending brackets, delimitation by “,” , and “-” convention.</p></li>
+<li><p>Follow the example sequence to create overall layup. All layers present anywhere on the “MainS” (18) should be listed.</p></li>
+<li><p>First material related box allows for binary selection between single material layup, and variable material layup. If variable material layup is selected, additional pop-up menu is provided for definition of individual layers. Every layer needs to be defined.</p></li>
+<li><p>When “uniform” is selected in (7) one material has to be selected here from database. Otherwise, this field is automatically filled from (7).</p></li>
+<li><p>This allows for adding a material to database. This material is than made available for (7) &amp; (8).</p></li>
+<li><p>Stacking direction does not have to be defined, but might be useful for some applications. Currently the recommended method is simple point vector definition. The point is required for as a start reference somewhere on tool surface.</p></li>
+<li><p>Shows a tick-mark if “stacking direction” has been properly defined by (10).</p></li>
+<li><p>This allows for drop-off definitions. Spline-type geometry is selected from the Catia tree, by clicking this button the name of the reference spline is projected into the selected field in (15) or below.</p></li>
+<li><p>Currently the reference splines must all be stored in “gs2” geometry set. The only other visible geometry in the part should be the main surface “MainS”. This will be made flexible in future releases.</p></li>
+<li><p>Names under “gs2” should show under (15) upon selection+(12) button press.</p></li>
+<li><p>Has been explained above.</p></li>
+<li><p>Selects plies dropped of at spline shown in (15). The ply reference numbers start with “1” and correspond to position on the “Overall layup” list.</p></li>
+<li><p>Generates the layup file in selected working folder.</p></li>
+<li><p>“main_shape” geometrical set must exist and must contain the overall part surface “MainS”. The current version of LD only supports one surface at a time. This also means that this geometrical set must not contain any other geometries.</p></li>
+<li><p>Same process as for (1) can be followed for layup import functionality. The “Import.catvbs” is the corresponding macro. The  “Layup_CATimport.py” is the corresonding Python script.</p></li>
+<li><p>Spline 2 button is optional, allows for specification of zone-drop-offs. All plies specified on the same row will be dropped off in equal steps between the two splines specified. This is newest functionality and it still needs improvements/bug-fixes.</p></li>
+</ol>
+<p>“LD_layup_database.txt” is a comma delimited database of materials. Material parameters are explained on first row. Each other row corresponds to 1 material entry. The LD could also be hooked to an SQL database, but for now the simple comma delimited database makes sharing of the LD tool easier.</p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="Introduction.html"
+                          title="previous chapter">Introduction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Modules.html"
+                          title="next chapter">Modules</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/User Guide.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Modules.html" title="Modules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Layup Definition 4.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">User Guide</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, J.Kucera.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>
