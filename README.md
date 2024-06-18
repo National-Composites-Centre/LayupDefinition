@@ -1,9 +1,7 @@
 # Introduction 
 Standalone version of "layup definition" tool.
 
-Go here for more details and NCC's internal USER GUIDE : https://nationalcompositescentre.sharepoint.com/sites/Wiki/SitePages/Layup-definition---for-design,-analysis-and-manufacturing.aspx 
-
-External users are encouraged to visit the documentation pages.
+Most up to date information is available in the documentation https://national-composites-centre.github.io/LayupDefinition/
 
 For tool testers this testing procedure is recommended:
 1.	Verify installation. 
