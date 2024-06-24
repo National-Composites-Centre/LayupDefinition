@@ -35,7 +35,7 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty
 
 #from LD STANDARD file
-import stcOBJ
+import CompositeStandard
 
 
 version = "4.0"
@@ -268,7 +268,7 @@ def CLF(self):
     
     if rrun == True:
         
-        FL = stcOBJ.CompositeDB()
+        FL = CompositeStandard.CompositeDB()
 
         #only generate layup def. if no error
         error = False
@@ -301,9 +301,9 @@ def CLF(self):
         
         #delimiting spline ref
         for ii, pt in enumerate(edge_points[:,0]):
-                sp_temp_points.append(stcOBJ.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
-        FL.allGeometry.append(stcOBJ.Spline(points=sp_temp_points, memberName = "edge"))
-        spline_refs = [noG]
+                sp_temp_points.append(CompositeStandard.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
+        FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = "edge"))
+        spline_refs = []
         noG = noG + 1
 
         print("spls",spls)
@@ -314,10 +314,10 @@ def CLF(self):
             #pickr corresponding point matrix
             mx = mat_list[i]
             for ii, pt in enumerate(mx[:,0]):
-                sp_temp_points.append(stcOBJ.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
+                sp_temp_points.append(CompositeStandard.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
 
-            FL.allGeometry.append(stcOBJ.Spline(points=sp_temp_points, memberName = spl))
-            spline_refs.append(noG)
+            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl))
+            spline_refs.append(spl)
             print("NOG", noG)
             print("sp", spl)
             noG = noG + 1
@@ -329,7 +329,7 @@ def CLF(self):
         seq = seq.split("]")[0]
 
         
-        FL.allGeometry.append(stcOBJ.Sequence())
+        FL.allGeometry.append(CompositeStandard.Sequence())
         #initiate material database 
         if FL.allMaterials == None:
             FL.allMaterials = []
@@ -351,10 +351,13 @@ def CLF(self):
             dropped = False
             cc = 38
             drop = self.layout.children[cc].text
-            d_ref = 0
+            d_ref = "edge"
             while drop != "":
                 for dr in drop.split(",")[:]:
-                    if dr == (i-1):
+                    print("dr",dr)
+                    print("i+1",i+1)
+                    if dr == str(i+1):
+                        print("HERE")
                         if dropped == True:
                             content=Button(text="At least one layer is dropped-off twice. Please fix to proceed.")
                             popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
@@ -364,25 +367,18 @@ def CLF(self):
                         else:
                             dropped == True
                             #find which spline corresponds to drop-off
-                            if cc == 0:
-                                d_ref = 0
-                            else:
-                                d_ref = (cc-38)/-3
+                            d_ref = self.layout.children[cc+2].text
                 cc = cc - 3
                 drop = self.layout.children[cc].text
 
-            #only assumed one piece per ply atm
-            #if dropped == True:
-            #    print(d_ref)
 
-
-            pic = stcOBJ.Piece(splineRelimitation = spline_refs[d_ref])
+            pic = CompositeStandard.Piece(splineRelimitation = d_ref)
 
             #create piece delimited by correct spline 
             
-            refG.plies.append(stcOBJ.Ply(orientation=s,material=mat,cutPieces=[pic]))
+            refG.plies.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic]))
             #store material
-            print("stored mat",stored_mat)
+            #print("stored mat",stored_mat)
             if mat not in stored_mat:
                 for m in matDatabase:
                     print(m.materialName,mat)
