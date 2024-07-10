@@ -229,8 +229,6 @@ def CLF(self):
         
     no_p = self.no_p #this needs fixing, no idea how to pass variable from ui
 
-    
-
 
     #Upon running the layup generation
     i = 1
@@ -250,8 +248,30 @@ def CLF(self):
     #        spls.append(self.layout.children[43-i*3].text)
     #    i = i + 1
 
-    #might have a nicer way to reference than integer... 
-    CADfile = self.layout.children[66].text+"\\"+self.layout.children[69].text+".txt"
+    #check if folder select includes part
+    if "." in self.layout.children[66].text:
+        #assume no other . in name, otherwise ... TODO
+        if (self.layout.children[66].text.split(".")[1]).lower() == "catpart":
+            if self.layout.children[69].text in (self.layout.children[66].text.split(".")[0]).lower():
+                CADfile = self.layout.children[66].text
+            else:
+                content=Button(text="""Selected part is not loaded in CATIA. \n Specify correct part, or specify folder and part separately \n; not using SelectFile button""")
+                popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+                content.bind(on_press=popup.dismiss)
+                popup.open()
+                #should prevent rest of layup generation
+                return()
+        else:
+            content=Button(text="The selected file has to be CATIA part file (for now..)")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
+            #should prevent rest of layup generation
+            return()
+        
+    else:
+        #seems like part was specified manually
+        CADfile = self.layout.children[66].text+"\\"+self.layout.children[69].text+".txt"
     print(CADfile)
     #create points delimiting layers
     mat_list, edge_points,rrun,close_list = SplinesToClouds(spls,CADfile=CADfile)
@@ -471,7 +491,7 @@ def sp1(self):
                 print("currently only 12 splines are supported")
     except:
         content=Button(text='please select an object first')
-        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(0.5, 0.2))
+        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
         content.bind(on_press=popup.dismiss)
         popup.open()
         
@@ -502,7 +522,7 @@ def sp2(self,obj):
                 print("currently only 12 splines are supported")
     except:
         content=Button(text='please select an object first')
-        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(0.5, 0.2))
+        popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
         content.bind(on_press=popup.dismiss)
         popup.open()
 
@@ -561,7 +581,7 @@ def MatSel(location):
             #if neither database is available, create a .txt one empty
             content=Button(text="Material database file was not found in the location specified.\n"
                         +"Therefore an empty materil file has been created, but needs to be populated.")
-            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(0.5, 0.2))
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
             content.bind(on_press=popup.dismiss)
             popup.open()
             with open(location+"\\"+lf3+"txt", 'w') as f:

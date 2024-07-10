@@ -34,6 +34,13 @@ from kivy.uix.popup import Popup
 #tkinter used for pop-ups rn, as kivy is not good with those
 import tkinter.messagebox
 
+#for file select
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty
+
+from kivy.uix.boxlayout import BoxLayout
+from utilities import TK_FS
+from functools import partial
 
 
 def on_checkbox_active(checkbox, value):
@@ -124,7 +131,7 @@ class LayupDefinitionApp(App):
             sys.exit()
 
             
-        version = "3.2" #3+ is after Kivy transition
+        version = "4.0" #3+ is after Kivy transition
 
         #def_folder = 'C:\\'
 
@@ -135,12 +142,15 @@ class LayupDefinitionApp(App):
         self.layout.add_widget(TextInput(text=cat_name))
         self.layout.add_widget(Label(text='[version='+version+']'))
 
+        
         #row2
         self.layout.add_widget(Label(text='Location:'))
         self.location = TextInput(text=os.getcwd())  
         self.layout.add_widget(self.location)
-        #self.layout.add_widget(Button(text='Select', on_press=self.select1))
-        self.layout.add_widget(Label(text=''))
+        self.layout.add_widget(Button(text='SelectFile', on_press=self.TK_FS_))
+        #self.layout.add_widget(Label(text=''))
+        
+        
 
         #row3
         self.layout.add_widget(Label(text='Layup example format:'))
@@ -246,6 +256,10 @@ class LayupDefinitionApp(App):
 
     def sp2_2(self,obj):
         self = sp2(self)
+        return(self)
+    
+    def TK_FS_(self,obj):
+        self = TK_FS(self)
         return(self)
 
     def CLFr(self,obj):

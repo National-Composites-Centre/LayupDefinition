@@ -76,7 +76,31 @@ def clean_json(strin):
 
     return(new_str)
 
+def TK_FS(self):
+    #the random argument is just because kivy passes random stuff during on_press... so...
 
+    #TK file selector
+    import tkinter as tk
+    from tkinter import filedialog
+
+    filetypes = (
+        ('Text files', '*.TXT'),
+        ('All files', '*.*'),
+    )
+
+    # open-file dialog
+    root = tk.Tk()
+    filename = tk.filedialog.askopenfilename(
+        title='Select a file...',
+        filetypes=filetypes,
+    )
+    self.layout.children[66].text = filename
+    root.destroy()
+    return(self)
+
+
+# filename == 'path/to/myfilename.txt' if you type 'myfilename'
+# filename == 'path/to/myfilename.abc' if you type 'myfilename.abc'
 #test
 
 #mat_list = np.asarray([[1,2,3],[1,3,3],[1,4,3],[1,5,3],[3,5,3]])
