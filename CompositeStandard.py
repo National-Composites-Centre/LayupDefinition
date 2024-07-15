@@ -11,7 +11,7 @@ from pydantic.config import ConfigDict
 import json
 from jsonic import serialize, deserialize
 
-#### VERSION 0.62 ####
+#### VERSION 0.63 ####
 #https://github.com/National-Composites-Centre/CompoST
 
 #potentially replace by JSON parser for Pydantic
@@ -65,7 +65,7 @@ class FileMetadata(BaseModel):
     lastModified: Optional[str] = Field(None) #Automatically refresh on save - string for json parsing
     lastModifiedBy: Optional[str] = Field(None) #String name
     author: Optional[str] = Field(None) #String Name
-    version: Optional[str] = Field(default= "0.6") #eg. - type is stirng now, for lack of better options
+    version: Optional[str] = Field(default= "0.63") #eg. - type is stirng now, for lack of better options
     layupDefinitionVersion: Optional[str] = Field(None)
 
     #external file references - separate class?
@@ -90,7 +90,7 @@ class CompositeDB(BaseModel):
 
 
 class CompositeElement(BaseModel):
-    database: Optional[object] = Field(None) #can there be multiple of these dbItems in one file? if so ==> list???
+    database: Optional[object]= Field(None)  #can there be multiple of these dbItems in one file? if so ==> list???
     subComponent: Optional[list] = Field(None) # list of subComponents -- all belong to the CompositeElement family
     mappedProperties: Optional[list] = Field(None) #list of objects - various allowed: Component, Sequence, Ply, Piece
     mappedRequirements: Optional[list] = Field(None) # list of objects - "Requirement"
@@ -102,10 +102,10 @@ class CompositeElement(BaseModel):
 #IS THIS EVEN NEDED TODO
 class compositeDBItem(BaseModel):
     #ID: int = Field(None) #implied for now
-    name: Optional[str] = Field(None)
-    additionalParameters: Optional[dict] = Field(None) # dictionary of floats
-    additionalProperties: Optional[dict] = Field(None) # dictionary of strings
-    stageIDs: Optional[list] = Field(None) #list of references to stages
+    name: Optional[str]
+    additionalParameters: Optional[dict] # dictionary of floats
+    additionalProperties: Optional[dict] # dictionary of strings
+    stageIDs: Optional[list] #list of references to stages
 
 
 class Piece(CompositeElement):
@@ -201,10 +201,21 @@ class Spline(GeometricElement):
     points: Optional[list] = Field(None) #list of point objects
     length: Optional[float] = Field(None)
 
+
+#unused rn
+def cleandict(d):
+    if isinstance(d, dict):
+        return {k: cleandict(v) for k, v in d.items() if v is not None}
+    elif isinstance(d, list):
+        return [cleandict(v) for v in d]
+    else:
+        return d
+
+
 def test():
 
     d = CompositeDB()
-    d.fileMetadata.lastModified = "30/05/2024"
+    d.fileMetadata.lastModified = "10/07/2024"
     d.name = "new"
 
     # Convert dictionary to JSON string
@@ -213,6 +224,8 @@ def test():
 
     # Print the JSON string
     print(json_str)
+
+    #json_str = cleandict(json_str)
 
     #save as file
     with open('Test_CI_dump.json', 'w') as out_file:

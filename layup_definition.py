@@ -16,8 +16,6 @@ from utilities import sharpness , clean_json
 #from secondary_UIs import newMat #currently unused cleanup - because of parameter passing issues between UI's in differnt scripts
 #from utilities import sharpness
 
-
-
 #replacing PySimpleGUI by Kivy
 from kivy.app import App
 from kivy.uix.textinput import TextInput
@@ -37,8 +35,6 @@ from kivy.properties import StringProperty
 #from LD STANDARD file
 import CompositeStandard
 
-
-version = "4.0"
 
 def pts100(sp,hbs,hs,part1,HSF,partDocument2,dir = False,no_p = 100):
     # Adding new body to part1
@@ -157,7 +153,6 @@ def SplinesToClouds(spNames,no_p = 100,CADfile=""):
         content.bind(on_press=popup.dismiss)
         popup.open()
 
-        #error = True
         return(mat_list,[0,0,0],False)
 
     #The above is repeated for edge spline - created by boundary function 
@@ -229,6 +224,18 @@ def CLF(self):
         
     no_p = self.no_p #this needs fixing, no idea how to pass variable from ui
 
+    #first check if multi-material, appropriate number of lines
+    if self.cb3.active  == True:
+        mat_count =  self.layout.children[56].text.count(",") #counts an empty line break hence +1 below 
+        ply_count =  self.layout.children[60].text.count(",")+1
+        if mat_count != ply_count:
+            content=Button(text="Please make sure list of materials is same lenght as list of plies,\nfor multi-material option")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
+            #should prevent rest of layup generation
+            return()
+
 
     #Upon running the layup generation
     i = 1
@@ -253,7 +260,7 @@ def CLF(self):
         #assume no other . in name, otherwise ... TODO
         if (self.layout.children[66].text.split(".")[1]).lower() == "catpart":
             if self.layout.children[69].text in (self.layout.children[66].text.split(".")[0]).lower():
-                CADfile = self.layout.children[66].text
+                CADfile = self.layout.children[66].text.split(".")[0]
             else:
                 content=Button(text="""Selected part is not loaded in CATIA. \n Specify correct part, or specify folder and part separately \n; not using SelectFile button""")
                 popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
@@ -271,7 +278,7 @@ def CLF(self):
         
     else:
         #seems like part was specified manually
-        CADfile = self.layout.children[66].text+"\\"+self.layout.children[69].text+".txt"
+        CADfile = self.layout.children[66].text+"\\"+self.layout.children[69].text
     print(CADfile)
     #create points delimiting layers
     mat_list, edge_points,rrun,close_list = SplinesToClouds(spls,CADfile=CADfile)
@@ -290,14 +297,11 @@ def CLF(self):
         
         FL = CompositeStandard.CompositeDB()
 
-        #only generate layup def. if no error
-        error = False
-
         #load material database to select materials from
-        matDatabase = matData(self.layout.children[66].text)
+        matDatabase = matData(CADfile)
 
         #start constructing the layup .txt file
-        FL.fileMetadata.layupDefinitionVersion = "4.0"
+        FL.fileMetadata.layupDefinitionVersion = self.layout.children[68].text
         #At initial creation of JSON file last modification and author are the same
         FL.fileMetadata.lastModifiedBy = str(os.getlogin())
         FL.fileMetadata.author = str(os.getlogin())
@@ -326,7 +330,7 @@ def CLF(self):
         spline_refs = []
         noG = noG + 1
 
-        print("spls",spls)
+        #print("spls",spls)
         #Save reference splines
         for i,spl in enumerate(spls):
             #turn points into point classes
@@ -338,8 +342,8 @@ def CLF(self):
 
             FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl))
             spline_refs.append(spl)
-            print("NOG", noG)
-            print("sp", spl)
+            #print("NOG", noG)
+            #print("sp", spl)
             noG = noG + 1
 
 
@@ -364,7 +368,7 @@ def CLF(self):
         for i, s in enumerate(seq.split(",")[:]):
             if self.layout.children[57].active == True:
                 mat = self.layout.children[56].text
-            else:
+            elif self.layout.children[54].active == True :
                 mat = self.layout.children[56].text.split(",")[i]
 
             #find if dropped off
@@ -374,16 +378,13 @@ def CLF(self):
             d_ref = "edge"
             while drop != "":
                 for dr in drop.split(",")[:]:
-                    print("dr",dr)
-                    print("i+1",i+1)
                     if dr == str(i+1):
-                        print("HERE")
                         if dropped == True:
                             content=Button(text="At least one layer is dropped-off twice. Please fix to proceed.")
                             popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
                             content.bind(on_press=popup.dismiss)
                             popup.open()
-                            error = True
+                            return()
                         else:
                             dropped == True
                             #find which spline corresponds to drop-off
@@ -400,60 +401,43 @@ def CLF(self):
             #store material
             #print("stored mat",stored_mat)
             if mat not in stored_mat:
+                mat_found = False
                 for m in matDatabase:
                     print(m.materialName,mat)
                     if mat == m.materialName:
                         FL.allMaterials.append(m)
+                        mat_found = True
+                        break
+
+                if mat_found ==False:
+                    content=Button(text="One of the materials specified is not available in database.\nPlease change the material or add to database.")
+                    popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+                    content.bind(on_press=popup.dismiss)
+                    popup.open()
+                    return()
 
                 #preventing re-storing of material
                 stored_mat.append(mat)
 
-        #only finish layup definition if no errors have been trigered
-        if error != True:
-            txt_file = CADfile.replace(".CatPart","_layup.json")
-            txt_file = txt_file.replace(".txt","_layup.json")
+
+        #txt_file = CADfile.replace(".CatPart","_layup.json")
+        #txt_file = txt_file.replace(".txt","_layup.json")
+        txt_file = CADfile+"_layup.json"
+        
+        #if file exists, check that user is ok with over-write
+        if os.path.isfile(txt_file):
             
-            #if file exists, check that user is ok with over-write
-            if os.path.isfile(txt_file):
-                
-                #Kivy is horrible with pop-ups, so dedicated Tkinter question
-                import tkinter as tk
-                
-                root = tk.Tk()
-                frame = tk.Frame()
-                frame.pack(fill=tk.BOTH, expand=True)
+            #Kivy is horrible with pop-ups, so dedicated Tkinter question
+            import tkinter as tk
+            
+            root = tk.Tk()
+            frame = tk.Frame()
+            frame.pack(fill=tk.BOTH, expand=True)
 
-                result = "no"
-                
-                def clickButton1():
-                    json_str = serialize(FL, string_output = True)
-                    json_str = clean_json(json_str)
-
-                    #save as file
-                    with open(txt_file, 'w') as out_file:
-                        out_file.write(json_str)
-
-                    content=Button(text="Layup file has been created, stored as: \n"+str(txt_file)+"\n [Click to close pop-up]")
-                    popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
-                    content.bind(on_press=popup.dismiss)
-                    popup.open()
-                    root.destroy()
-                
-                def clickButton2():
-                    root.destroy()
-
-                
-                label = tk.Label(frame, text = "Corresponding file already exists, do you want it replaced?")
-                button1 = tk.Button(frame, text="Yes", command=clickButton1)
-                button2 = tk.Button(frame, text="No", command=clickButton2)
-                label.pack()
-                button1.pack()
-                button2.pack()
-                root.mainloop()       
-
-            else:
+            result = "no"
+            
+            def clickButton1():
                 json_str = serialize(FL, string_output = True)
-                #json_str = pprint.pformat(json_str,indent=2).replace("'",'"')
                 json_str = clean_json(json_str)
 
                 #save as file
@@ -464,6 +448,33 @@ def CLF(self):
                 popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
                 content.bind(on_press=popup.dismiss)
                 popup.open()
+                root.destroy()
+            
+            def clickButton2():
+                root.destroy()
+
+            
+            label = tk.Label(frame, text = "Corresponding file already exists, do you want it replaced?")
+            button1 = tk.Button(frame, text="Yes", command=clickButton1)
+            button2 = tk.Button(frame, text="No", command=clickButton2)
+            label.pack()
+            button1.pack()
+            button2.pack()
+            root.mainloop()       
+
+        else:
+            json_str = serialize(FL, string_output = True)
+            #json_str = pprint.pformat(json_str,indent=2).replace("'",'"')
+            json_str = clean_json(json_str)
+
+            #save as file
+            with open(txt_file, 'w') as out_file:
+                out_file.write(json_str)
+
+            content=Button(text="Layup file has been created, stored as: \n"+str(txt_file)+"\n [Click to close pop-up]")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
 
     #enforce unique spline names
 def sp1(self):
@@ -527,15 +538,26 @@ def sp2(self,obj):
         popup.open()
 
 
-def select1(self,obj):
-    print("no")
+#def select1(self,obj):
+#    print("no")
 
 def matData(location):
     lf3 = "LD_layup_database"
     s = []
 
+    #try:
+
+    #rr = location+"/"+lf3+".json"
+    rr = location.replace("/","//")
+    count = rr.count("//")
+    r = rr.split("//")[count]
+    if r == "":
+        rr = rr+"LD_layup_database.json"
+    else:
+        rr = rr.replace(r,"LD_layup_database.json")
+
     try:
-        with open(location+"\\"+lf3+".json", "r") as in_file:
+        with open(rr, "r") as in_file:
             json_str= in_file.read()
 
             D = deserialize(json_str,string_input=True)

@@ -84,7 +84,7 @@ def TK_FS(self):
     from tkinter import filedialog
 
     filetypes = (
-        ('Text files', '*.TXT'),
+        ('catiaFiles','*.CATPart'),
         ('All files', '*.*'),
     )
 
