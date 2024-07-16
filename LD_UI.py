@@ -199,7 +199,7 @@ class LayupDefinitionApp(App):
         else:
             location = self.layout.children[66].text
         try:
-            with open(location+"x_test_135_materials.csv","r") as ex:
+            with open(location+self.layout.children[69].text+".csv","r") as ex:
                 tt = ex.read()
                 mat_list = ""
                 mat_list = tt.replace("\n",",")
