@@ -1286,11 +1286,11 @@
    }
    ], "allStages": null, "allMaterials": [
    {
-      "materialName": "made3", "E1": "\t190000.000", "E2": "\t10000.000", "G12": "\t6000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.30000000", "density": "\t0.00000000200000", "permeability": "\t8E-13", "type": " GFRP\n", "_serialized_type": "stcOBJ.Material"
+      "materialName": "made3", "E1": "\t190000.000", "E2": "\t10000.000", "G12": "\t6000.000", "G23": "5000", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.30000000", "density": "\t0.00000000200000", "permeability": "\t8E-13", "type": " GFRP\n", "_serialized_type": "CompositeStandard.Material"
    }
    , 
    {
-      "materialName": "made7", "E1": "\t210000.000", "E2": "\t14000.000", "G12": "\t6500.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.21000000", "density": "\t0.00000000180000", "permeability": "\t8E-13", "type": " NA\n", "_serialized_type": "stcOBJ.Material"
+      "materialName": "made7", "E1": "\t210000.000", "E2": "\t14000.000", "G12": "\t6500.000", "G23": "5", "v12": "\t0.200", "infoSource": "\tmade up", "thickness": "\t0.21000000", "density": "\t0.00000000180000", "permeability": "\t8E-13", "type": " NA\n", "_serialized_type": "CompositeStandard.Material"
    }
    ], "allAxisSystems": 
    {

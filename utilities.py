@@ -3,6 +3,33 @@ import numpy as np
 from numpy.linalg import norm
 import math
 
+import win32com.client.dynamic
+import numpy as np
+import sys
+
+#replacing PySimpleGUI by Kivy
+from kivy.app import App
+from kivy.uix.textinput import TextInput
+from kivy.uix.label import Label
+
+from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.gridlayout import GridLayout
+
+from kivy.core.window import Window
+from kivy.uix.scrollview import ScrollView
+
+from kivy.uix.popup import Popup
+
+from kivy.lang import Builder
+from kivy.properties import StringProperty
+
+from kivy.uix.dropdown import DropDown
+from kivy.base import runTouchApp
+
+from kivy.uix.checkbox import CheckBox
+
+
 
 def sharpness(mat_list):
     
@@ -95,6 +122,17 @@ def TK_FS(self):
         filetypes=filetypes,
     )
     self.layout.children[66].text = filename
+
+
+    mat_list = MatSel(self.location.text)
+    
+    for mt in mat_list: #CHANGE THIS FOR INPUT
+        btn = Button(text=mt, size_hint_y=None, height=22)
+        # for each button, LINK TEXT
+        btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+        # then add the button inside the dropdown
+        self.dd1.add_widget(btn)
+
     root.destroy()
     return(self)
 
@@ -117,3 +155,54 @@ with open("D:\\CAD_library_sampling\\TestCad_SmartDFM\\X\\x_test_128.txt","r") a
     clean_json(jstr)
 
 '''
+from jsonic import serialize, deserialize
+
+#TODO THIS is duplicated in Layup definition --- probably better if it lives here and is imported to there!
+def MatSel(location):
+    #retreive the names of available materials 
+    
+    #first check JSON database available
+            
+    #if JSON not available, check for .txt database available
+    lf3 = "LD_layup_database"
+    seznam = []
+
+    if "." in location:
+        location = location.replace(location.split("/")[location.count("/")],"")
+        #print("loc fixed",location)
+
+    try:
+        with open(location+"\\"+lf3+".json", "r") as in_file:
+            json_str= in_file.read()
+
+            D = deserialize(json_str,string_input=True)
+            
+            for i ,material in enumerate(D.allMaterials):
+                seznam.append(material.materialName)
+    except:
+        print("no JSON material database")
+        pass
+    
+    if seznam == []:
+        try:
+
+            with open(location+"\\"+lf3+".txt", "r") as text_file:
+
+                seznam = []
+                for i ,line in enumerate(text_file.readlines()):
+                    if line.count(",") > 0 and i != 0:
+                        #print("yes")
+                        m_ref = line.split(",")[1]
+                        seznam.append(m_ref)
+        except:
+            #if neither database is available, create a .txt one empty
+            content=Button(text="Material database file was not found in the location specified.\n"
+                        +"Therefore an empty materil file has been created, but needs to be populated.")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
+
+            seznam = ["no material available"]
+
+    return(seznam)
+

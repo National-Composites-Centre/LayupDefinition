@@ -90,9 +90,6 @@ class LayupDefinitionApp(App):
                                      +" (One was likely opened in background right now).")
             sys.exit()
 
-
-        #def_folder = 'C:\\'
-
         self.layout = GridLayout(cols=3,row_force_default=True,row_default_height=32)
         
         #row1
@@ -121,20 +118,20 @@ class LayupDefinitionApp(App):
         self.layout.add_widget(Label(text='Uniform material:'))
         self.cb2 = CheckBox(active = True,on_press=self.cb_sync_2)   
         self.layout.add_widget(self.cb2)
-        dd1 = DropDown()
+        self.dd1 = DropDown()
         mat_list = MatSel(self.location.text)
         for mt in mat_list: #CHANGE THIS FOR INPUT
             btn = Button(text=mt, size_hint_y=None, height=22)
             # for each button, LINK TEXT
-            btn.bind(on_release=lambda btn: dd1.select(btn.text))
+            btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
             # then add the button inside the dropdown
-            dd1.add_widget(btn)
+            self.dd1.add_widget(btn)
         # create a big main button
 
         mb1 = Button(text=mat_list[0],on_press=self.sm)
-        mb1.bind(on_release=dd1.open)
+        mb1.bind(on_release=self.dd1.open)
         # assign the data to the button text.
-        dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
+        self.dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
         self.layout.add_widget(mb1)
 
         #row4.5
@@ -142,9 +139,6 @@ class LayupDefinitionApp(App):
         self.cb3 = CheckBox(active = False,on_press=self.cb_sync_3)  
         self.layout.add_widget(self.cb3)
         self.layout.add_widget(Label(text=''))  #adjust button functionality
-
-        #self.cb2.bind(active= on_checkbox_active) 
-        #self.cb3.bind(active= on_checkbox_active)  
 
         #row5
         self.layout.add_widget(Button(text='Stacking direction', on_press=AddMat)) #CHANGE FUNCTION
