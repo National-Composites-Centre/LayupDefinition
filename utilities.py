@@ -1,4 +1,3 @@
-
 import numpy as np
 from numpy.linalg import norm
 import math
@@ -29,19 +28,15 @@ from kivy.base import runTouchApp
 
 from kivy.uix.checkbox import CheckBox
 
-
-
 def sharpness(mat_list):
     
     w = np.size(mat_list,1)
     l = np.size(mat_list,0)
 
     i = 0
-    
     add = np.zeros((l,1))
     mat_list_p = np.append(mat_list, add, axis=1)
 
-    
     while i < l:
         if i == l-1:
             next_ = mat_list[0,:]
@@ -72,8 +67,6 @@ def sharpness(mat_list):
 
         mat_list_p[i,3] = sharp_bn
 
-
-
         i += 1
 
     return(mat_list_p)
@@ -82,7 +75,6 @@ def clean_json(strin):
     #strin = input json string to clean
     s = strin.replace("{","\n{\n")
     s = s.replace("}","\n}\n")
-
 
     tabs = 0
     new_str = ""
@@ -97,9 +89,6 @@ def clean_json(strin):
 
         if "{" in line:
             tabs = tabs + 1
-
-
-    #print(new_str)
 
     return(new_str)
 

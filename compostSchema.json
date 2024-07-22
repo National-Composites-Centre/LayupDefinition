@@ -9,6 +9,11 @@
                         }
                     ],
                     "default": {
+                        "name": null,
+                        "additionalParameters": null,
+                        "additionalProperties": null,
+                        "stageIDs": null,
+                        "ID": null,
                         "memberName": null,
                         "source": null,
                         "x": 0.0,
@@ -79,6 +84,67 @@
         },
         "CompositeComponent": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "database": {
                     "anyOf": [
                         {},
@@ -245,6 +311,67 @@
         },
         "CompositeElement": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "database": {
                     "anyOf": [
                         {},
@@ -417,7 +544,7 @@
                             "type": "null"
                         }
                     ],
-                    "default": "0.63",
+                    "default": "0.64",
                     "title": "Version"
                 },
                 "layupDefinitionVersion": {
@@ -455,6 +582,11 @@
                     ],
                     "default": null,
                     "title": "Cadfilepath"
+                },
+                "maxID": {
+                    "default": 0,
+                    "title": "Maxid",
+                    "type": "integer"
                 }
             },
             "title": "FileMetadata",
@@ -462,6 +594,67 @@
         },
         "GeometricElement": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "memberName": {
                     "anyOf": [
                         {
@@ -628,6 +821,67 @@
         },
         "Piece": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "database": {
                     "anyOf": [
                         {},
@@ -771,15 +1025,17 @@
                     "default": null,
                     "title": "Membername"
                 },
-                "splineRelimitation": {
+                "splineRelimitationRef": {
                     "anyOf": [
-                        {},
+                        {
+                            "type": "integer"
+                        },
                         {
                             "type": "null"
                         }
                     ],
                     "default": null,
-                    "title": "Splinerelimitation"
+                    "title": "Splinerelimitationref"
                 },
                 "compositeElement": {
                     "anyOf": [
@@ -797,6 +1053,67 @@
         },
         "Ply": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "database": {
                     "anyOf": [
                         {},
@@ -995,6 +1312,67 @@
         },
         "Point": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "memberName": {
                     "anyOf": [
                         {
@@ -1038,6 +1416,67 @@
         },
         "Sequence": {
             "properties": {
+                "name": {
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Name"
+                },
+                "additionalParameters": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalparameters"
+                },
+                "additionalProperties": {
+                    "anyOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Additionalproperties"
+                },
+                "stageIDs": {
+                    "anyOf": [
+                        {
+                            "items": {},
+                            "type": "array"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Stageids"
+                },
+                "ID": {
+                    "anyOf": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null,
+                    "title": "Id"
+                },
                 "database": {
                     "anyOf": [
                         {},
@@ -1304,8 +1743,13 @@
             ],
             "default": {
                 "pt": {
+                    "ID": null,
+                    "additionalParameters": null,
+                    "additionalProperties": null,
                     "memberName": null,
+                    "name": null,
                     "source": null,
+                    "stageIDs": null,
                     "x": 0.0,
                     "y": 0.0,
                     "z": 0.0
@@ -1333,10 +1777,11 @@
                 "lastModified": null,
                 "lastModifiedBy": null,
                 "author": null,
-                "version": "0.63",
+                "version": "0.64",
                 "layupDefinitionVersion": null,
                 "cadFile": null,
-                "cadFilePath": null
+                "cadFilePath": null,
+                "maxID": 0
             }
         }
     },

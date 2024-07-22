@@ -292,10 +292,13 @@ def CLF(self):
 
     #for edge points - corners
     edge_points = sharpness(edge_points)
+
+
     
     if rrun == True:
         
         FL = CompositeStandard.CompositeDB()
+        FL.rootElements = []
 
         #load material database to select materials from
         matDatabase = matData(CADfile)
@@ -326,7 +329,9 @@ def CLF(self):
         #delimiting spline ref
         for ii, pt in enumerate(edge_points[:,0]):
                 sp_temp_points.append(CompositeStandard.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
-        FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = "edge"))
+        FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = "edge",ID = (FL.fileMetadata.maxID+1)))
+        FL.fileMetadata.maxID += 1
+        
         spline_refs = []
         noG = noG + 1
 
@@ -340,26 +345,25 @@ def CLF(self):
             for ii, pt in enumerate(mx[:,0]):
                 sp_temp_points.append(CompositeStandard.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
 
-            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl))
+            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl,ID = (FL.fileMetadata.maxID+1)))
+            FL.fileMetadata.maxID += 1
             spline_refs.append(spl)
-            #print("NOG", noG)
-            #print("sp", spl)
-            noG = noG + 1
 
+            noG = noG + 1
 
         #the layup itself
         seq = str(self.layout.children[60].text)
         seq = seq.split("[")[1]
         seq = seq.split("]")[0]
 
-        
-        FL.allGeometry.append(CompositeStandard.Sequence())
+        FL.rootElements.append(CompositeStandard.Sequence(ID = (FL.fileMetadata.maxID+1)))
+        FL.fileMetadata.maxID += 1
         #initiate material database 
         if FL.allMaterials == None:
             FL.allMaterials = []
-        gc = len(FL.allGeometry)
+        gc = len(FL.rootElements)
 
-        refG = FL.allGeometry[gc-1]
+        refG = FL.rootElements[gc-1]
         refG.plies = []
         #loop throug plies
 
@@ -392,12 +396,20 @@ def CLF(self):
                 cc = cc - 3
                 drop = self.layout.children[cc].text
 
+            #To turn name refs into number refs
+            for spline in FL.allGeometry:
+                if type(spline) == type(CompositeStandard.Spline()):
+                    if spline.memberName == d_ref:
+                        ID_ref = spline.ID
 
-            pic = CompositeStandard.Piece(splineRelimitation = d_ref)
+
+            pic = CompositeStandard.Piece(splineRelimitationRef = ID_ref,ID = (FL.fileMetadata.maxID+1))
+            FL.fileMetadata.maxID += 1
 
             #create piece delimited by correct spline 
             
-            refG.plies.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic]))
+            refG.plies.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic],ID = (FL.fileMetadata.maxID+1)))
+            FL.fileMetadata.maxID += 1
             #store material
             #print("stored mat",stored_mat)
             if mat not in stored_mat:
