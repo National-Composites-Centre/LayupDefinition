@@ -11,7 +11,7 @@ from vecEX3 import wrmmm
 import os
 from datetime import date
 import math
-from utilities import sharpness , clean_json 
+from utilities import sharpness , clean_json , MatSel
 
 #from secondary_UIs import newMat #currently unused cleanup - because of parameter passing issues between UI's in differnt scripts
 #from utilities import sharpness
@@ -259,7 +259,7 @@ def CLF(self):
     if "." in self.layout.children[66].text:
         #assume no other . in name, otherwise ... TODO
         if (self.layout.children[66].text.split(".")[1]).lower() == "catpart":
-            if self.layout.children[69].text in (self.layout.children[66].text.split(".")[0]).lower():
+            if (self.layout.children[69].text).lower() in (self.layout.children[66].text.split(".")[0]).lower():
                 CADfile = self.layout.children[66].text.split(".")[0]
             else:
                 content=Button(text="""Selected part is not loaded in CATIA. \n Specify correct part, or specify folder and part separately \n; not using SelectFile button""")
@@ -301,7 +301,7 @@ def CLF(self):
         FL.rootElements = []
 
         #load material database to select materials from
-        matDatabase = matData(CADfile)
+        matDatabase = MatSel(CADfile)
 
         #start constructing the layup .txt file
         FL.fileMetadata.layupDefinitionVersion = self.layout.children[68].text
@@ -364,7 +364,7 @@ def CLF(self):
         gc = len(FL.rootElements)
 
         refG = FL.rootElements[gc-1]
-        refG.plies = []
+        refG.subComponents = []
         #loop throug plies
 
         #list of stored materials
@@ -408,7 +408,7 @@ def CLF(self):
 
             #create piece delimited by correct spline 
             
-            refG.plies.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic],ID = (FL.fileMetadata.maxID+1)))
+            refG.subComponents.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic],ID = (FL.fileMetadata.maxID+1),splineRelimitationRef = ID_ref))
             FL.fileMetadata.maxID += 1
             #store material
             #print("stored mat",stored_mat)
@@ -422,7 +422,7 @@ def CLF(self):
                         break
 
                 if mat_found ==False:
-                    content=Button(text="One of the materials specified is not available in database.\nPlease change the material or add to database.")
+                    content=Button(text="One of the materials specified is not available in database ("+mat+").\nPlease change the material or add to database.")
                     popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
                     content.bind(on_press=popup.dismiss)
                     popup.open()
@@ -553,77 +553,8 @@ def sp2(self,obj):
 #def select1(self,obj):
 #    print("no")
 
-def matData(location):
-    lf3 = "LD_layup_database"
-    s = []
 
-    #try:
 
-    #rr = location+"/"+lf3+".json"
-    rr = location.replace("/","//")
-    count = rr.count("//")
-    r = rr.split("//")[count]
-    if r == "":
-        rr = rr+"LD_layup_database.json"
-    else:
-        rr = rr.replace(r,"LD_layup_database.json")
-
-    try:
-        with open(rr, "r") as in_file:
-            json_str= in_file.read()
-
-            D = deserialize(json_str,string_input=True)
-            s = D.allMaterials
-    except:
-        print("no JSON material database found")
-        pass
-    return(s)
-
-def MatSel(location):
-    #retreive the names of available materials 
-    
-    #first check JSON database available
-            
-    #if JSON not available, check for .txt database available
-    lf3 = "LD_layup_database"
-    seznam = []
-
-    try:
-        with open(location+"\\"+lf3+".json", "r") as in_file:
-            json_str= in_file.read()
-
-            D = deserialize(json_str,string_input=True)
-            
-            for i ,material in enumerate(D.allMaterials):
-                seznam.append(material.materialName)
-    except:
-        print("no JSON material database")
-        pass
-    
-    if seznam == []:
-        try:
-
-            with open(location+"\\"+lf3+".txt", "r") as text_file:
-
-                seznam = []
-                for i ,line in enumerate(text_file.readlines()):
-                    if line.count(",") > 0 and i != 0:
-                        #print("yes")
-                        m_ref = line.split(",")[1]
-                        seznam.append(m_ref)
-        except:
-            #if neither database is available, create a .txt one empty
-            content=Button(text="Material database file was not found in the location specified.\n"
-                        +"Therefore an empty materil file has been created, but needs to be populated.")
-            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
-            content.bind(on_press=popup.dismiss)
-            popup.open()
-            with open(location+"\\"+lf3+"txt", 'w') as f:
-                f.write("id,Material_name,	E1,	E2,	G12, G23,	v12,"
-                        +"	Info_source,	layer_thickness,	density,	perme_coeff, type")
-            seznam = ["no material available"]
-
-    return(seznam)
 
 
     

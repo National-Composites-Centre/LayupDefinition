@@ -116,7 +116,7 @@ def TK_FS(self):
     mat_list = MatSel(self.location.text)
     
     for mt in mat_list: #CHANGE THIS FOR INPUT
-        btn = Button(text=mt, size_hint_y=None, height=22)
+        btn = Button(text=mt.materialName, size_hint_y=None, height=22)
         # for each button, LINK TEXT
         btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
         # then add the button inside the dropdown
@@ -146,52 +146,36 @@ with open("D:\\CAD_library_sampling\\TestCad_SmartDFM\\X\\x_test_128.txt","r") a
 '''
 from jsonic import serialize, deserialize
 
-#TODO THIS is duplicated in Layup definition --- probably better if it lives here and is imported to there!
 def MatSel(location):
     #retreive the names of available materials 
     
-    #first check JSON database available
-            
-    #if JSON not available, check for .txt database available
+    #Currently only works with JSON database
     lf3 = "LD_layup_database"
     seznam = []
-
-    if "." in location:
-        location = location.replace(location.split("/")[location.count("/")],"")
-        #print("loc fixed",location)
-
-    try:
-        with open(location+"\\"+lf3+".json", "r") as in_file:
-            json_str= in_file.read()
-
-            D = deserialize(json_str,string_input=True)
-            
-            for i ,material in enumerate(D.allMaterials):
-                seznam.append(material.materialName)
-    except:
-        print("no JSON material database")
-        pass
     
-    if seznam == []:
+    #remove the file out of file-path
+    loc = ""
+    for sec in location.split("/")[0:(location.count("/"))]:
+        loc += sec+"/"
+    location = loc
+
+    if location == "":
+        seznam = ["no material available"]
+    else:
+        #location = location.replace(r"/","\\")
         try:
+            with open(location+"/"+lf3+".json", "r") as in_file:
+                json_str= in_file.read()
+                
 
-            with open(location+"\\"+lf3+".txt", "r") as text_file:
-
-                seznam = []
-                for i ,line in enumerate(text_file.readlines()):
-                    if line.count(",") > 0 and i != 0:
-                        #print("yes")
-                        m_ref = line.split(",")[1]
-                        seznam.append(m_ref)
+                D = deserialize(json_str,string_input=True)
+                
+                for i ,material in enumerate(D.allMaterials):
+                    seznam.append(material)
         except:
-            #if neither database is available, create a .txt one empty
-            content=Button(text="Material database file was not found in the location specified.\n"
-                        +"Therefore an empty materil file has been created, but needs to be populated.")
-            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.15))
-            content.bind(on_press=popup.dismiss)
-            popup.open()
-
+            print("no JSON material database")
             seznam = ["no material available"]
+            pass
 
     return(seznam)
 

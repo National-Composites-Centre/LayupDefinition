@@ -57,7 +57,7 @@ class LayupDefinitionApp(App):
     Window.size = (500, 800)
     
     def build(self):
-        version = "4.1" #3+ is after Kivy transition
+        version = "4.2" #3+ is after Kivy transition
         TITLE = 'Layup Definition '+str(version)
 
         Window.set_title(TITLE)
@@ -99,7 +99,7 @@ class LayupDefinitionApp(App):
 
         #row2
         self.layout.add_widget(Label(text='Location:'))
-        self.location = TextInput(text=os.getcwd())  
+        self.location = TextInput(text="")  #self.location = TextInput(text=os.getcwd())  
         self.layout.add_widget(self.location)
         self.layout.add_widget(Button(text='SelectFile', on_press=self.TK_FS_))
         #self.layout.add_widget(Label(text=''))
@@ -120,15 +120,26 @@ class LayupDefinitionApp(App):
         self.layout.add_widget(self.cb2)
         self.dd1 = DropDown()
         mat_list = MatSel(self.location.text)
-        for mt in mat_list: #CHANGE THIS FOR INPUT
-            btn = Button(text=mt, size_hint_y=None, height=22)
-            # for each button, LINK TEXT
-            btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
-            # then add the button inside the dropdown
-            self.dd1.add_widget(btn)
+        if mat_list != ["no material available"]:
+            for mt in mat_list: #CHANGE THIS FOR INPUT
+                btn = Button(text=mt.materialName, size_hint_y=None, height=22)
+                # for each button, LINK TEXT
+                btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+                # then add the button inside the dropdown
+                self.dd1.add_widget(btn)
+            mb1 = Button(text=mat_list[0].materialName,on_press=self.sm)
+
+        else:
+            #This sectio ncan be simplifiedd if ["no material available"]
+            for mt in mat_list: #CHANGE THIS FOR INPUT
+                btn = Button(text=mt, size_hint_y=None, height=22)
+                # for each button, LINK TEXT
+                btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+                # then add the button inside the dropdown
+                self.dd1.add_widget(btn)
         # create a big main button
 
-        mb1 = Button(text=mat_list[0],on_press=self.sm)
+            mb1 = Button(text=mat_list[0],on_press=self.sm)
         mb1.bind(on_release=self.dd1.open)
         # assign the data to the button text.
         self.dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
