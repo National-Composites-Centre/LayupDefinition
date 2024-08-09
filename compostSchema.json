@@ -999,11 +999,6 @@
                     "default": null,
                     "title": "Status"
                 },
-                "placementRosette": {
-                    "default": null,
-                    "title": "Placementrosette",
-                    "type": "integer"
-                },
                 "splineRelimitationRef": {
                     "anyOf": [
                         {
@@ -1224,18 +1219,6 @@
                     ],
                     "default": null,
                     "title": "Material"
-                },
-                "placementRosette": {
-                    "anyOf": [
-                        {
-                            "type": "integer"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null,
-                    "title": "Placementrosette"
                 },
                 "orientation": {
                     "anyOf": [
@@ -1487,18 +1470,6 @@
                     ],
                     "default": null,
                     "title": "Material"
-                },
-                "placementRosette": {
-                    "anyOf": [
-                        {
-                            "type": "integer"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null,
-                    "title": "Placementrosette"
                 },
                 "splineRelimitationRef": {
                     "anyOf": [
