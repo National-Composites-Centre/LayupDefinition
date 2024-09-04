@@ -9,7 +9,7 @@
 project = 'Layup Definition'
 copyright = '2024, J.Kucera'
 author = 'J.Kucera'
-release = '4.0'
+release = '4.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

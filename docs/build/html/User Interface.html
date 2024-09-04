@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Introduction &#8212; Layup Definition 4.2 documentation</title>
+    <title>User Interface &#8212; Layup Definition 4.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bizstyle.css" />
     
@@ -19,8 +19,7 @@
     <script src="_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="User Guide" href="User%20Guide.html" />
-    <link rel="prev" title="Welcome to Layup Definition’s documentation!" href="index.html" />
+    <link rel="prev" title="Work in progress" href="Work%20in%20progress.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -33,13 +32,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="User%20Guide.html" title="User Guide"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to Layup Definition’s documentation!"
+          <a href="Work%20in%20progress.html" title="Work in progress"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Layup Definition 4.2 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Introduction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">User Interface</a></li> 
       </ul>
     </div>  
 
@@ -48,23 +44,14 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
-<p>This is set of scripts that form minimalistic layup definition. The intention is to replace expensive tools such as FibreSIM or CATIA CBA, while retaining the core functionalities.</p>
-<p>The goal is to do this in an Open Source format with complete visibility of the Layup Definition standard and to allow for development for bespoke plug-ins. The Layup Definition should be compatible with all software, although for streamlining workflow additional development might be required for each new software.</p>
-<p>The Layup Definition allows user to define layup, drop-offs, materials, fully and without excessive additional effort to the design workflow. This definition can then be in simulations or manufacturing.</p>
-<p>The original basic UI is shown below as implemented in CATIA environment:</p>
-<img alt="_images/Fig1.png" src="_images/Fig1.png" />
-<section id="why-use-make-this-tool">
-<h2>Why use/make this tool?<a class="headerlink" href="#why-use-make-this-tool" title="Permalink to this heading">¶</a></h2>
-<p>(Main value proposition)</p>
-<ol class="arabic simple">
-<li><p>No cost</p></li>
-<li><p>Defines ply-drop-offs with a simple 3D point-cloud that forms a spline</p></li>
-<li><p>Complete visibility of the definition; .txt file is both machine and human readable</p></li>
-<li><p>Easy to build additional modules on top of it, making it more compatible than main OTSs (FibreSIM and CATIA CBA)</p></li>
-<li><p>Universal file format - can be easily used at any stage of design</p></li>
-</ol>
+  <section id="user-interface">
+<h1>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this heading">¶</a></h1>
+<p>Originally PySimpleGUI was used to generate the UI; old releases are using this. However, PySimpleGUI become commercial software and hence it is not appropriate to Open-Source project.
+Therefore transition was made to Kivy UI. The transition was quite cumbersome,as Kivy uses different style of UI architecture.</p>
+<section id="outstanding-issues">
+<h2>Outstanding issues<a class="headerlink" href="#outstanding-issues" title="Permalink to this heading">¶</a></h2>
+<p>Kivy is less suitable for working with multiple windows and pop-ups. Therefore multiple windows are avoided and pop-ups are done separately using tkinter Python library.</p>
+<p>Kivy initially caused issues with packaging LD into executable, to be used directly as an integrated button in CATIA. Therefore, currently standalone executable is not available.</p>
 </section>
 </section>
 
@@ -78,8 +65,8 @@
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Introduction</a><ul>
-<li><a class="reference internal" href="#why-use-make-this-tool">Why use/make this tool?</a></li>
+<li><a class="reference internal" href="#">User Interface</a><ul>
+<li><a class="reference internal" href="#outstanding-issues">Outstanding issues</a></li>
 </ul>
 </li>
 </ul>
@@ -87,18 +74,13 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="index.html"
-                          title="previous chapter">Welcome to Layup Definition’s documentation!</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="User%20Guide.html"
-                          title="next chapter">User Guide</a></p>
+    <p class="topless"><a href="Work%20in%20progress.html"
+                          title="previous chapter">Work in progress</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/Introduction.rst.txt"
+      <li><a href="_sources/User Interface.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -123,13 +105,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="User%20Guide.html" title="User Guide"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to Layup Definition’s documentation!"
+          <a href="Work%20in%20progress.html" title="Work in progress"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Layup Definition 4.2 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Introduction</a></li> 
+        <li class="nav-item nav-item-this"><a href="">User Interface</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
