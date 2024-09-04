@@ -11,7 +11,7 @@ from pydantic.config import ConfigDict
 import json
 from jsonic import serialize, deserialize
 
-#### VERSION 0.65 ####
+#### VERSION 0.67 ####
 #https://github.com/National-Composites-Centre/CompoST
 
 #potentially replace by JSON parser for Pydantic
@@ -35,8 +35,8 @@ class CompositeDBItem(BaseModel):
 class GeometricElement(CompositeDBItem):
     #child of Geometric elements
     source: Optional[object] = Field(default = None)
+    refFile: Optional[str] = Field(default = None)
     
-
 class Point(GeometricElement):
     #value: np.array = Field(np.asarray[0,0,0])
     #memberName: Optional[str] = Field(None) #can point out specific points for reference - group points for unexpected reasons...
@@ -67,13 +67,12 @@ class AxisSystem(GeometricElement):
     v3y: float = Field(default = 0)
     v3z: float = Field(default = 1)
 
-
 class FileMetadata(BaseModel):
     #the below might be housed in specialized class
     lastModified: Optional[str] = Field(default=None) #Automatically refresh on save - string for json parsing
     lastModifiedBy: Optional[str] = Field(default=None) #String name
     author: Optional[str] = Field(default=None) #String Name
-    version: Optional[str] = Field(default= "0.64") #eg. - type is stirng now, for lack of better options
+    version: Optional[str] = Field(default= "0.67") #eg. - type is stirng now, for lack of better options
     layupDefinitionVersion: Optional[str] = Field(default=None)
 
     #external file references - separate class?
@@ -91,13 +90,14 @@ class CompositeDB(BaseModel):
     #All elements and all geometry are all stored here and used elsewhere as refrence
     #Points are stored withing those, as referencing is not efficient
 
-    rootElements: Optional[list['CompositeElement']] = Field(default=None)   #List of "CompositeElement" type objects
+    allComposite: Optional[list['CompositeElement']] = Field(default=None)   #List of "CompositeElement" type objects
     allEvents: Optional[list] = Field(default=None) #List of "events" objects - all = exhaustive list
     allGeometry: Optional[list['GeometricElement']] = Field(default=None) # list of "GeometricElement" objects - all = exhaustive list
     allStages: Optional[list] = Field(default=None) #??? manuf process - all = exhaustive list
     allMaterials: Optional[list['Material']] = Field(default=None) #List of "Material" objects - all = exhaustive list
+    allDefects: Optional[list['Material']] = Field(default=None) # list of all defects
+    allTolerances: Optional[list['Tolerance']] = Field(default = None) # list of all Tolerances
     fileMetadata: FileMetadata = Field(default = FileMetadata()) #list of all "axisSystems" objects = exhaustive list
-
 
 class CompositeElement(CompositeDBItem):
     database: Optional[object] = Field(None) #can there be multiple of these dbItems in one file? if so ==> list???
@@ -109,14 +109,11 @@ class CompositeElement(CompositeDBItem):
     referencedBy: Optional[list[int]] = Field(None) # list of int>
     status: Optional[str] = Field(None) #TODO
 
-
-
 class Piece(CompositeElement):
     #CompositeElement type object
     #In practical terms this is section of ply layed-up in one (particulartly relevant for AFP or similar)
     splineRelimitationRef: Optional[int] = Field(None) #reference to spline object
     material: Optional[str] = Field(None) #ref to material in allMaterials
-
 
 class Ply(CompositeElement):
     #CompositeElement type object
@@ -134,7 +131,6 @@ class Sequence(CompositeElement):
 class CompositeComponent(CompositeElement):
     #this object is mostly going to be used for bonding co-curing etc where multiple distinct composite components
     #can be defined
-
     integratedComponent: Optional[list[CompositeDB]] = Field(None) #allows for nesting another comonent within this file
 
 class SourceSystem(BaseModel):
@@ -182,13 +178,14 @@ class MeshElement(BaseModel):
     normal: list = Field(None) #x,y,z in the list
 
 class AreaMesh(GeometricElement):
-    elements: list['Element'] = Field(None) # requires element classes only
+    meshElements: list[MeshElement] = Field(None) # requires element classes only
     
 class Spline(GeometricElement):
     #can either be defined directly here as 3xX array, or can be defined as a list of points (not both)
     splineType: Optional[int] = Field(None)  #types of splines based on OCC line types?
     points: Optional[list['Point']] = Field(None) #list of point objects
     length: Optional[float] = Field(None)
+    breaks: Optional[list[int]] = Field(None) #This allows for identification of points which break continuity of spline (i.e. spline is ended and new started - used for sharp corners)
 
 class Defect(CompositeDBItem):
     
@@ -206,13 +203,50 @@ class Wrinkle(Defect):
     maxRoC: Optional[float] = Field(None)
     size_x: Optional[float] = Field(None) #primary direction size, according to referenced axisSystemID, or global axis if local not available
     size_y: Optional[float] = Field(None)
+    splineRelimitationRef: Optional[int] = Field(None) #points collected as spline relimiting the defect
+    meshRef: Optional[int] = Field(None) # area covered by defect expressed in mesh format (area or volume)
 
 
 def generate_json_schema(file_name:str):
     with open(file_name, 'w') as f:
         f.write(json.dumps(CompositeDB.model_json_schema(), indent=4))
 
-generate_json_schema('compostSchema.json')
+
+#
+##
+###
+####
+#####
+#From here onwards the objects are not fully standardised - their architecture and definitions are likely to chane!
+#####
+####
+###
+##
+#
+
+def Tolerance(CompositeDBItem):
+    #inherited by all specific tolerance definition objects
+
+    appliedToIDs: Optional[list[int]] = Field(None)
+
+def WrinkleTolerance(Tolerance):
+
+    maxZ: Optional[float] = Field(None)
+    maxY: Optional[float] = Field(None)
+    maxX: Optional[float] = Field(None)
+    axisSystemID: Optional[int] = Field(None)
+    maxArea: Optional[float] = Field(None)
+    maxSlope: Optional[float] = Field(None)
+    maxSkew: Optional[float] = Field(None) #TODO define
+
+
+
+
+
+
+
+
+#generate_json_schema('compostSchema.json')
 
 
 
