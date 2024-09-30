@@ -34,66 +34,33 @@ from kivy.uix.popup import Popup
 #tkinter used for pop-ups rn, as kivy is not good with those
 import tkinter.messagebox
 
+#for file select
+from kivy.factory import Factory
+from kivy.properties import ObjectProperty
+
+from kivy.uix.boxlayout import BoxLayout
+from utilities import TK_FS
+from functools import partial
 
 
 def on_checkbox_active(checkbox, value):
-    print(checkbox)
+    #print(checkbox)
     if value:
         print('The checkbox', checkbox, 'is active')
 
     else:
         print('The checkbox', checkbox, 'is inactive')
 
-'''
-class MultiMaterial(App):
 
-
-    Window.size = (200,700)
-    def build(self):
-        self.noLayers = 0
-        self.layout = GridLayout(cols=2,row_force_default=True,row_default_height=32)
-
-        i = 0
-        while i < self.noLayers:
-            #row1
-            self.layout.add_widget(Label(text=str(i)))
-            dd1 = DropDown()
-            mat_list = MatSel(self.location.text)
-            for mt in mat_list: #CHANGE THIS FOR INPUT
-                btn = Button(text=mt, size_hint_y=None, height=22)
-                # for each button, LINK TEXT
-                btn.bind(on_release=lambda btn: dd1.select(btn.text))
-                # then add the button inside the dropdown
-                dd1.add_widget(btn)
-            # create a big main button
-
-            mb1 = Button(text=mat_list[0])
-            mb1.bind(on_release=dd1.open)
-            # assign the data to the button text.
-            dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
-            self.layout.add_widget(mb1)
-            i = i + 1
-'''
-#
-'''
-#define screens
-class MainWindow(Screen):
-    pass
-
-class MatWindow(Screen):
-    pass
-
-class WindowManager(ScreenManager):
-    pass
-
-kv = Builder.load_file('new_window.kv')
-'''
 
 class LayupDefinitionApp(App):
-
-
     Window.size = (500, 800)
+    
     def build(self):
+        version = "4.2" #3+ is after Kivy transition
+        TITLE = 'Layup Definition '+str(version)
+
+        Window.set_title(TITLE)
 
         seznam2 = ["","uniform","variable"]
         #GUI definition 
@@ -123,11 +90,6 @@ class LayupDefinitionApp(App):
                                      +" (One was likely opened in background right now).")
             sys.exit()
 
-            
-        version = "3.2" #3+ is after Kivy transition
-
-        #def_folder = 'C:\\'
-
         self.layout = GridLayout(cols=3,row_force_default=True,row_default_height=32)
         
         #row1
@@ -137,11 +99,11 @@ class LayupDefinitionApp(App):
 
         #row2
         self.layout.add_widget(Label(text='Location:'))
-        self.location = TextInput(text=os.getcwd())  
+        self.location = TextInput(text="")  #self.location = TextInput(text=os.getcwd())  
         self.layout.add_widget(self.location)
-        #self.layout.add_widget(Button(text='Select', on_press=self.select1))
-        self.layout.add_widget(Label(text=''))
-
+        self.layout.add_widget(Button(text='SelectFile', on_press=self.TK_FS_))
+        #self.layout.add_widget(Label(text=''))
+        
         #row3
         self.layout.add_widget(Label(text='Layup example format:'))
         self.layout.add_widget(Label(text='[0,90,-45,45]'))
@@ -154,32 +116,40 @@ class LayupDefinitionApp(App):
         
         #row4
         self.layout.add_widget(Label(text='Uniform material:'))
-        self.cb2 = CheckBox(active = True,on_press=self.cb_sync_1)   
+        self.cb2 = CheckBox(active = True,on_press=self.cb_sync_2)   
         self.layout.add_widget(self.cb2)
-        dd1 = DropDown()
+        self.dd1 = DropDown()
         mat_list = MatSel(self.location.text)
-        for mt in mat_list: #CHANGE THIS FOR INPUT
-            btn = Button(text=mt, size_hint_y=None, height=22)
-            # for each button, LINK TEXT
-            btn.bind(on_release=lambda btn: dd1.select(btn.text))
-            # then add the button inside the dropdown
-            dd1.add_widget(btn)
+        if mat_list != ["no material available"]:
+            for mt in mat_list: #CHANGE THIS FOR INPUT
+                btn = Button(text=mt.materialName, size_hint_y=None, height=22)
+                # for each button, LINK TEXT
+                btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+                # then add the button inside the dropdown
+                self.dd1.add_widget(btn)
+            mb1 = Button(text=mat_list[0].materialName,on_press=self.sm)
+
+        else:
+            #This sectio ncan be simplifiedd if ["no material available"]
+            for mt in mat_list: #CHANGE THIS FOR INPUT
+                btn = Button(text=mt, size_hint_y=None, height=22)
+                # for each button, LINK TEXT
+                btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+                # then add the button inside the dropdown
+                self.dd1.add_widget(btn)
         # create a big main button
 
-        mb1 = Button(text=mat_list[0])
-        mb1.bind(on_release=dd1.open)
+            mb1 = Button(text=mat_list[0],on_press=self.sm)
+        mb1.bind(on_release=self.dd1.open)
         # assign the data to the button text.
-        dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
+        self.dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
         self.layout.add_widget(mb1)
 
         #row4.5
         self.layout.add_widget(Label(text='Variable material:'))
-        self.cb3 = CheckBox(active = False,on_press=self.cb_sync_2)  
+        self.cb3 = CheckBox(active = False,on_press=self.cb_sync_3)  
         self.layout.add_widget(self.cb3)
-        self.layout.add_widget(Button(text='select materials', on_press=self.mm))  #adjust button functionality
-
-        self.cb2.bind(active= on_checkbox_active) #link these two ... no working...
-        self.cb3.bind(active= on_checkbox_active)  
+        self.layout.add_widget(Label(text=''))  #adjust button functionality
 
         #row5
         self.layout.add_widget(Button(text='Stacking direction', on_press=AddMat)) #CHANGE FUNCTION
@@ -191,8 +161,8 @@ class LayupDefinitionApp(App):
 
         #row6
         self.layout.add_widget(Button(text='Spline 1 - interactive', on_press=self.sp1_1))
-        self.layout.add_widget(Button(text='Spline 2 - interactive', on_press=self.sp2_2))
-        self.layout.add_widget(Button(text='Add new material', on_press=AddMat))
+        self.layout.add_widget(Button(text='Spline 2 - interactive', on_press=self.sp2_2,disabled=True))
+        self.layout.add_widget(Button(text='Add new material', on_press=AddMat,disabled = True))
 
         #row7
         self.layout.add_widget(Label(text=''))
@@ -224,20 +194,55 @@ class LayupDefinitionApp(App):
         #return(kv)
     
     #The below passing as to happen because within button one cannot (for some reasons) specify variables going into function
-
-    def cb_sync_1(self,obj):
-        if self.cb3.active == True:
-            self.cb3.active = False
+    def multi_mat(self,obj):
+        if "." in self.layout.children[66].text:
+            #assume no other . in name, otherwise ... TODO
+            t6 = self.layout.children[66].text.replace("/","//")
+            ct = t6.count("//")
+            t_temp = t6.split("//")[ct]
+            location = t6.replace(t_temp,"")
         else:
+            location = self.layout.children[66].text
+        try:
+            with open(location+self.layout.children[69].text+".csv","r") as ex:
+                tt = ex.read()
+                mat_list = ""
+                mat_list = tt.replace("\n",",")
+                self.layout.children[56].text = mat_list
+        except:
+            content=Button(text=location+self.layout.children[69].text+".csv\ndoes not exist, for multi material please add this .csv file.\nAdd names of materials divided by line-breaks.\nNumber of lines must correspond to number of listed orientations.")
+            popup = Popup(title='User info', content=content,auto_dismiss=False,size_hint=(1.5, 0.25))
+            content.bind(on_press=popup.dismiss)
+            popup.open()
+            error = True
             self.cb3.active = True
+            self.cb2.active = False
+
         return(self)
 
     def cb_sync_2(self,obj):
         if self.cb2.active == True:
-            self.cb2.active = False
+            self.cb3.active = False
+
         else:
+            self.cb3.active = True
+            self = self.multi_mat(self)
+        return(self)
+
+    def cb_sync_3(self,obj):
+        if self.cb3.active == True:
             self.cb2.active = False
+            self = self.multi_mat(self)
+        else:
+            self.cb2.active = True
+            
         return(self) 
+    
+    def sm(self,obj):
+        self.cb2.active = True
+        self.cb3.active = False
+        return(self)
+        
 
 
     def sp1_1(self,obj):
@@ -247,19 +252,15 @@ class LayupDefinitionApp(App):
     def sp2_2(self,obj):
         self = sp2(self)
         return(self)
+    
+    def TK_FS_(self,obj):
+        self = TK_FS(self)
+        return(self)
 
     def CLFr(self,obj):
         self = CLF(self)
         return(self)
     
-    def mm(self,obj):
-        if self.cb3.active == True:
-            print("multi-material currently not available")
-            #MultiMaterial().run()
-        else:
-            #turn print into pop-up!
-            print("multi-material must be selected")
-        return(self)
     
 
     
