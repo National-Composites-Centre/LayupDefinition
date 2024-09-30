@@ -34,7 +34,7 @@ print(json_str)
 #json_str = cleandict(json_str)
 
 #save as file
-with open("D:\CAD_library_sampling\TestCad_SmartDFM\X\LD_layup_database.json", 'w') as out_file:
+with open("D:\\CAD_library_sampling\\CompoST_examples\\NO_IP_v067\\LD_layup_database.json", 'w') as out_file:
     out_file.write(json_str)
 
         

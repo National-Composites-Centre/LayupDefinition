@@ -11,7 +11,8 @@ from pydantic.config import ConfigDict
 import json
 from jsonic import serialize, deserialize
 
-#### VERSION 0.67 ####
+
+#### VERSION 0.68b ####
 #https://github.com/National-Composites-Centre/CompoST
 
 #potentially replace by JSON parser for Pydantic
@@ -23,13 +24,14 @@ from jsonic import serialize, deserialize
 #Therefore for now ID is not directly specified but is inherent in the list it belongs to)
 
 
-#IS THIS EVEN NEDED TODO
 class CompositeDBItem(BaseModel):
 
     memberName: Optional[str] = Field(default = None)
     additionalParameters: Optional[dict] = Field(default = None) # dictionary of floats
     additionalProperties: Optional[dict] = Field(default = None) # dictionary of strings
-    stageIDs: Optional[list] = Field(default = None) #list of references to stages
+    stageID: Optional[int] = Field(default = None) #stage where this object was generated / re-generated
+    deactivate_stageID: Optional[int] = Field(default = None) #this object is not relevant after this stage - either it has been superceeded or it's purpose was fullfilled
+    active: Optional[bool] = Field(default = True) #This can be turned to False to indicate this object does not represent the latest iteration of the part
     ID: Optional[int] = Field(default = None)
 
 class GeometricElement(CompositeDBItem):
@@ -72,7 +74,7 @@ class FileMetadata(BaseModel):
     lastModified: Optional[str] = Field(default=None) #Automatically refresh on save - string for json parsing
     lastModifiedBy: Optional[str] = Field(default=None) #String name
     author: Optional[str] = Field(default=None) #String Name
-    version: Optional[str] = Field(default= "0.67") #eg. - type is stirng now, for lack of better options
+    version: Optional[str] = Field(default= "0.68b") #eg. - type is stirng now, for lack of better options
     layupDefinitionVersion: Optional[str] = Field(default=None)
 
     #external file references - separate class?
@@ -96,11 +98,11 @@ class CompositeDB(BaseModel):
     allStages: Optional[list] = Field(default=None) #??? manuf process - all = exhaustive list
     allMaterials: Optional[list['Material']] = Field(default=None) #List of "Material" objects - all = exhaustive list
     allDefects: Optional[list['Material']] = Field(default=None) # list of all defects
-    allTolerances: Optional[list['Tolerance']] = Field(default = None) # list of all Tolerances
+    allTolerances: Optional[list['Tolerances']] = Field(default = None) # list of all Tolerances
     fileMetadata: FileMetadata = Field(default = FileMetadata()) #list of all "axisSystems" objects = exhaustive list
 
 class CompositeElement(CompositeDBItem):
-    database: Optional[object] = Field(None) #can there be multiple of these dbItems in one file? if so ==> list???
+
     subComponents: Optional[list['CompositeElement']] = Field(None) # list of subComponents -- all belong to the CompositeElement family
     mappedProperties: Optional[list['CompositeComponent|Sequence|Ply|Piece']] = Field(None) #list of objects - various allowed: Component, Sequence, Ply, Piece
     mappedRequirements: Optional[list] = Field(None) # list of objects - "Requirement"
@@ -191,10 +193,10 @@ class Defect(CompositeDBItem):
     
     map: Optional[CompositeDBItem] = Field(None) #any composite or geometric object
     location: Optional[list[float]] = Field(None) #x,y,z location
-    source: Optional[SourceSystem] = Field(None) #SourceSystem
     effMaterial: Optional[Material] = Field(None) #adjusted material class saved in materials
     status: Optional[object] = Field(None) #TODO
     axisSystemID: Optional[int] = Field(None) #reference to axis system stored in Geo. elements
+    file: Optional[str] = Field(None) #reference to dedicated defect file
 
 class Wrinkle(Defect):
 
@@ -207,9 +209,6 @@ class Wrinkle(Defect):
     meshRef: Optional[int] = Field(None) # area covered by defect expressed in mesh format (area or volume)
 
 
-def generate_json_schema(file_name:str):
-    with open(file_name, 'w') as f:
-        f.write(json.dumps(CompositeDB.model_json_schema(), indent=4))
 
 
 #
@@ -224,12 +223,12 @@ def generate_json_schema(file_name:str):
 ##
 #
 
-def Tolerance(CompositeDBItem):
+class Tolerances(CompositeDBItem):
     #inherited by all specific tolerance definition objects
 
     appliedToIDs: Optional[list[int]] = Field(None)
 
-def WrinkleTolerance(Tolerance):
+class WrinkleTolerance(Tolerances):
 
     maxZ: Optional[float] = Field(None)
     maxY: Optional[float] = Field(None)
@@ -239,48 +238,25 @@ def WrinkleTolerance(Tolerance):
     maxSlope: Optional[float] = Field(None)
     maxSkew: Optional[float] = Field(None) #TODO define
 
+class Stage(BaseModel):
+
+    stageID: Optional[int] = Field(default=None) 
+    memberName: Optional[str] = Field(default=None)
+    source: Optional[SourceSystem] = Field(None) #SourceSystem
+
+class PlyScan(Stage):
+
+    #the name is a placeholder
+
+    machine: Optional[str] = Field(default=None) #designation name of the machine underataking scanning 
+    binderActivated: Optional[str] = Field(default=None) # bool
 
 
 
-
-
-
-
+def generate_json_schema(file_name:str):
+    with open(file_name, 'w') as f:
+        f.write(json.dumps(CompositeDB.model_json_schema(), indent=4))
 #generate_json_schema('compostSchema.json')
 
 
 
-
-def test():
-    #TODO make dedicated testing module
-
-    d = CompositeDB()
-    d.fileMetadata.lastModified = "10/07/2024"
-    d.name = "new"
-
-    # Convert dictionary to JSON string
-    #print(d)
-    json_str = serialize(d, string_output = True)
-
-    # Print the JSON string
-    print(json_str)
-
-    #json_str = cleandict(json_str)
-
-    #save as file
-    with open('Test_CI_dump.json', 'w') as out_file:
-        out_file.write(json_str)
-        #json.dump(json_str, out_file, sort_keys = True,
-        #        ensure_ascii = False)
-        
-    #open file
-    with open('Test_CI_dump.json',"r") as in_file:
-        json_str= in_file.read()
-    
-    
-    print(json_str)
-    D = deserialize(json_str,string_input=True)
-    print(D)
-    print(D.fileMetadata.lastModified)
-
-#test()

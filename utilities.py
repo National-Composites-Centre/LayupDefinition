@@ -32,6 +32,7 @@ def sharpness(mat_list):
     
     w = np.size(mat_list,1)
     l = np.size(mat_list,0)
+    breaks = []
 
     i = 0
     add = np.zeros((l,1))
@@ -57,19 +58,21 @@ def sharpness(mat_list):
         angle = angle*180/math.pi
 
         #Thresholds for corners
-        #Consider medium threshold where sharp_bn = 1 but previous one is turned 0 to prevent
+        #Consider medium threshold where sharp_bn = 1 but previous one is turned 0 to prevent TODO
         #multiple corner points in one corner.
 
-        if angle < 130:
+        if angle < 90:
             sharp_bn = 1
+            breaks.append(i)
         else:
             sharp_bn = 0
+            
 
         mat_list_p[i,3] = sharp_bn
 
         i += 1
 
-    return(mat_list_p)
+    return(mat_list_p,breaks)
 
 def clean_json(strin):
     #strin = input json string to clean
@@ -114,10 +117,18 @@ def TK_FS(self):
 
 
     mat_list = MatSel(self.location.text)
-    
-    for mt in mat_list: #CHANGE THIS FOR INPUT
-        btn = Button(text=mt.materialName, size_hint_y=None, height=22)
-        # for each button, LINK TEXT
+
+    #generates list of drop-down options if material database JSON is available in selected directory
+    if mat_list != ["no material available"]:
+        for mt in mat_list: #CHANGE THIS FOR INPUT
+            btn = Button(text=mt.materialName, size_hint_y=None, height=22)
+            # for each button, LINK TEXT
+            btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
+            # then add the button inside the dropdown
+            self.dd1.add_widget(btn)
+    else:
+        #included so that applicaiton does not immediately crash if no database
+        btn = Button(text="no material available",size_hint_y=None,height=22)
         btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
         # then add the button inside the dropdown
         self.dd1.add_widget(btn)
@@ -153,26 +164,32 @@ def MatSel(location):
     lf3 = "LD_layup_database"
     seznam = []
     
+    
     #remove the file out of file-path
     loc = ""
     for sec in location.split("/")[0:(location.count("/"))]:
         loc += sec+"/"
+        #print(loc)
     location = loc
 
     if location == "":
         seznam = ["no material available"]
     else:
-        #location = location.replace(r"/","\\")
+        #allow for database not being immediately available
+        #print(location+lf3+".json")
         try:
-            with open(location+"/"+lf3+".json", "r") as in_file:
+            #collects all materials available
+            with open(location+lf3+".json", "r") as in_file:
                 json_str= in_file.read()
                 
-
                 D = deserialize(json_str,string_input=True)
                 
                 for i ,material in enumerate(D.allMaterials):
                     seznam.append(material)
         except:
+        
+            #TODO consider this to be pop-up
+        
             print("no JSON material database")
             seznam = ["no material available"]
             pass

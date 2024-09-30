@@ -287,18 +287,18 @@ def CLF(self):
     i = 0
     while i < len(mat_list):
         #for all defined splines
-        mat_list[i] = sharpness(mat_list[i])
+        mat_list[i], breaks = sharpness(mat_list[i])
         i = i + 1
 
     #for edge points - corners
-    edge_points = sharpness(edge_points)
+    edge_points, breaks = sharpness(edge_points)
 
 
     
     if rrun == True:
         
         FL = CompositeStandard.CompositeDB()
-        FL.rootElements = []
+        FL.allComposite = []
 
         #load material database to select materials from
         matDatabase = MatSel(CADfile)
@@ -345,7 +345,7 @@ def CLF(self):
             for ii, pt in enumerate(mx[:,0]):
                 sp_temp_points.append(CompositeStandard.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
 
-            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl,ID = (FL.fileMetadata.maxID+1)))
+            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl,ID = (FL.fileMetadata.maxID+1),breaks=breaks))
             FL.fileMetadata.maxID += 1
             spline_refs.append(spl)
 
@@ -356,14 +356,14 @@ def CLF(self):
         seq = seq.split("[")[1]
         seq = seq.split("]")[0]
 
-        FL.rootElements.append(CompositeStandard.Sequence(ID = (FL.fileMetadata.maxID+1)))
+        FL.allComposite.append(CompositeStandard.Sequence(ID = (FL.fileMetadata.maxID+1)))
         FL.fileMetadata.maxID += 1
         #initiate material database 
         if FL.allMaterials == None:
             FL.allMaterials = []
-        gc = len(FL.rootElements)
+        gc = len(FL.allComposite)
 
-        refG = FL.rootElements[gc-1]
+        refG = FL.allComposite[gc-1]
         refG.subComponents = []
         #loop throug plies
 
@@ -431,6 +431,7 @@ def CLF(self):
                 #preventing re-storing of material
                 stored_mat.append(mat)
 
+        
 
         #txt_file = CADfile.replace(".CatPart","_layup.json")
         #txt_file = txt_file.replace(".txt","_layup.json")

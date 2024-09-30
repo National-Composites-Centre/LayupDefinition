@@ -161,8 +161,8 @@ class LayupDefinitionApp(App):
 
         #row6
         self.layout.add_widget(Button(text='Spline 1 - interactive', on_press=self.sp1_1))
-        self.layout.add_widget(Button(text='Spline 2 - interactive', on_press=self.sp2_2))
-        self.layout.add_widget(Button(text='Add new material', on_press=AddMat))
+        self.layout.add_widget(Button(text='Spline 2 - interactive', on_press=self.sp2_2,disabled=True))
+        self.layout.add_widget(Button(text='Add new material', on_press=AddMat,disabled = True))
 
         #row7
         self.layout.add_widget(Label(text=''))
