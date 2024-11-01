@@ -12,3 +12,5 @@ Versions
     Version 4.0 replaces PySimpleGui with Kivy. This version currently lacks some functionality of 2.0 because new UI related difficulties. For instance only singular materials can currently be applied.
 
 4.1 Re-introduced multi-material, this time through list of materials for current layup, in .csv. 
+
+4.2 CompoST being used as the storage for LD file, but also for the material database input. https://github.com/National-Composites-Centre/CompoST

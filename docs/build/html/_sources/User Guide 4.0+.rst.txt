@@ -64,3 +64,5 @@ The layup definition (LD) user guide follows the numbering on Figure 2. Red boxe
 
 
 "LD_layup_database.txt" is a comma delimited database of materials. Material parameters are explained on first row. Each other row corresponds to 1 material entry. The LD could also be hooked to an SQL database, but for now the simple comma delimited database makes sharing of the LD tool easier. 
+
+From 4.2 onwards CompoST is the standard for the material database. The objects "Material" is used so that it can more seamlessly be moved into the final CompoST JSON LD file.

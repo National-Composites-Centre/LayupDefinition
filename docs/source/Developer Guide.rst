@@ -1,10 +1,8 @@
 Developer Guide
 ===============
 
-To be specified, needs to include:
+To some extend LayupDefinition development has been superceeded by CompoST standard.
 
-how to develop plug-ins for new software
+This library can still  be used to create CompoST layup definitions, but the main goal is to develop interfaces for other OS and OTS software to export into CompoST.
 
-how to add new informaiton to LD standard
-
-explanation of current architecture
+The main purpose of LD going forward is to serve as OS testbench for CompoST development down the line from design.
