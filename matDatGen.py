@@ -13,6 +13,8 @@ with open("D:\CAD_library_sampling\TestCad_SmartDFM\X\LD_layup_database.txt","r"
     for line in o.split("\n")[:]:
         m = cs.Material()
         m.materialName = line.split(",")[1]
+        if m.materialName == "AKSAca A-42":
+            m.materialName = "aksaca_a42"
         m.E1 = line.split(",")[2]
         m.E2 = line.split(",")[3]
         m.G12 = line.split(",")[4]
@@ -34,7 +36,7 @@ print(json_str)
 #json_str = cleandict(json_str)
 
 #save as file
-with open("D:\\CAD_library_sampling\\CompoST_examples\\NO_IP_v067\\LD_layup_database.json", 'w') as out_file:
+with open("D:\\CAD_library_sampling\\CompoST_examples\\WO4502_minimized bench\\LD_layup_database.json", 'w') as out_file:
     out_file.write(json_str)
 
         
