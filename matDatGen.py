@@ -2,7 +2,7 @@
 from jsonic import serialize, deserialize
 from utilities import sharpness , clean_json 
 
-import CompositeStandard as cs
+from CompoST import CompositeStandard as cs
 
 D = cs.CompositeDB()
 D.allMaterials = []

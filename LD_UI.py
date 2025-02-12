@@ -24,7 +24,7 @@ from kivy.base import runTouchApp
 
 from kivy.uix.checkbox import CheckBox
 
-from layup_definition import AddMat, sp1, sp2, CLF, MatSel
+from LayupDefinition.layup_definition import AddMat, sp1, sp2, CLF, MatSel
 
 import os
 
@@ -39,7 +39,7 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 
 from kivy.uix.boxlayout import BoxLayout
-from utilities import TK_FS
+from LayupDefinition.utilities import TK_FS
 from functools import partial
 
 

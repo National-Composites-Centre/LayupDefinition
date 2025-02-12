@@ -28,6 +28,8 @@ from kivy.base import runTouchApp
 
 from kivy.uix.checkbox import CheckBox
 
+from CompoST import CompositeStandard
+
 def sharpness(mat_list):
     
     w = np.size(mat_list,1)
@@ -121,7 +123,7 @@ def TK_FS(self):
     #generates list of drop-down options if material database JSON is available in selected directory
     if mat_list != ["no material available"]:
         for mt in mat_list: #CHANGE THIS FOR INPUT
-            btn = Button(text=mt.materialName, size_hint_y=None, height=22)
+            btn = Button(text=mt.memberName, size_hint_y=None, height=22)
             # for each button, LINK TEXT
             btn.bind(on_release=lambda btn: self.dd1.select(btn.text))
             # then add the button inside the dropdown
@@ -177,22 +179,22 @@ def MatSel(location):
     else:
         #allow for database not being immediately available
         #print(location+lf3+".json")
-        try:
+        #try:
             #collects all materials available
-            with open(location+lf3+".json", "r") as in_file:
-                json_str= in_file.read()
-                
-                D = deserialize(json_str,string_input=True)
-                
-                for i ,material in enumerate(D.allMaterials):
-                    seznam.append(material)
-        except:
+        with open(location+lf3+".json", "r") as in_file:
+            json_str= in_file.read()
+            
+            D = deserialize(json_str,string_input=True)
+            
+            for i ,material in enumerate(D.allMaterials):
+                seznam.append(material)
+        # except:
         
-            #TODO consider this to be pop-up
+        #     #TODO consider this to be pop-up
         
-            print("no JSON material database")
-            seznam = ["no material available"]
-            pass
+        #     print("no JSON material database")
+        #     seznam = ["no material available"]
+        #     pass
 
     return(seznam)
 
