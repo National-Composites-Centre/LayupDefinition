@@ -1,0 +1,50 @@
+name: LD
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - bzip2=1.0.8=h2bbff1b_6
+  - ca-certificates=2025.2.25=haa95532_0
+  - expat=2.7.1=h8ddb27b_0
+  - libffi=3.4.4=hd77b12b_1
+  - libmpdec=4.0.0=h827c3e9_0
+  - openssl=3.0.16=h3f729d1_0
+  - python=3.13.2=hadb2040_100_cp313
+  - python_abi=3.13=0_cp313
+  - setuptools=78.1.1=py313haa95532_0
+  - sqlite=3.45.3=h2bbff1b_0
+  - tk=8.6.14=h0416ee5_0
+  - tzdata=2025b=h04d1e81_0
+  - vc=14.42=haa95532_5
+  - vs2015_runtime=14.42.34433=hbfb602d_5
+  - wheel=0.45.1=py313haa95532_0
+  - xz=5.6.4=h4754444_1
+  - zlib=1.2.13=h8cc25b3_1
+  - pip:
+      - annotated-types==0.7.0
+      - certifi==2025.4.26
+      - charset-normalizer==3.4.2
+      - compost==0.8.3
+      - docutils==0.21.2
+      - filetype==1.2.0
+      - idna==3.10
+      - kivy==2.3.1
+      - kivy-deps-angle==0.4.0
+      - kivy-deps-glew==0.3.1
+      - kivy-deps-sdl2==0.8.0
+      - kivy-examples==2.3.1
+      - kivy-garden==0.1.5
+      - numpy==2.2.5
+      - pillow==10.4.0
+      - pip==25.1.1
+      - py-jsonic==0.0.2
+      - pydantic==2.11.4
+      - pydantic-core==2.33.2
+      - pygments==2.19.1
+      - pypiwin32==223
+      - pywin32==310
+      - requests==2.32.3
+      - typing-extensions==4.13.2
+      - typing-inspection==0.4.0
+      - urllib3==2.4.0
+prefix: C:\Users\jakub.kucera\miniforge3\envs\LD
