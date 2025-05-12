@@ -28,7 +28,7 @@ from kivy.base import runTouchApp
 
 from kivy.uix.checkbox import CheckBox
 
-from CompoST import CompositeStandard
+from CompoST import CompositeStandard as cs
 
 def sharpness(mat_list):
     
