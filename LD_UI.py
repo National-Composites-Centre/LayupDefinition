@@ -57,7 +57,7 @@ class LayupDefinitionApp(App):
     Window.size = (500, 800)
     
     def build(self):
-        version = "0.5.0" #3+ is after Kivy transition
+        version = "0.5.1" #3+ is after Kivy transition
         TITLE = 'Layup Definition '+str(version)
 
         Window.set_title(TITLE)
