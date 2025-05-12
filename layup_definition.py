@@ -33,7 +33,7 @@ from kivy.lang import Builder
 from kivy.properties import StringProperty
 
 #from LD STANDARD file
-import CompositeStandard
+from CompoST import CompositeStandard as cs
 
 
 def pts100(sp,hbs,hs,part1,HSF,partDocument2,dir = False,no_p = 100):
@@ -73,14 +73,14 @@ def pts100(sp,hbs,hs,part1,HSF,partDocument2,dir = False,no_p = 100):
     #standard .wrl interogation to obtain point locations
     vec, x = wrmmm(Multi = True)
     #corrects for extra 0,0,0 point
-    x = np.delete(x,0,axis=0)
+    #x = np.delete(x,0,axis=0)
 
     return(x,body1,body2)
 
-def SplinesToClouds(spNames,no_p = 100,CADfile=""):
+def SplinesToClouds(spNames,no_p = 200,CADfile=""):
     #Support function that generates a cloud of points (approx. equidistant) 
     #from a spline selected.
-    
+
     #number of points per spline: no_p
 
     #CATIA basic initiation
@@ -213,6 +213,7 @@ def SplinesToClouds(spNames,no_p = 100,CADfile=""):
     visPropertySet1.SetShow(1)
 
     #list of splines-point-lists, and edge points exported separately
+
     return(mat_list,edge_points,True,closed_list)
 
 
@@ -297,7 +298,7 @@ def CLF(self):
     
     if rrun == True:
         
-        FL = CompositeStandard.CompositeDB()
+        FL = cs.CompositeDB()
         FL.allComposite = []
 
         #load material database to select materials from
@@ -328,8 +329,8 @@ def CLF(self):
         
         #delimiting spline ref
         for ii, pt in enumerate(edge_points[:,0]):
-                sp_temp_points.append(CompositeStandard.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
-        FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = "edge",ID = (FL.fileMetadata.maxID+1)))
+                sp_temp_points.append(cs.Point(x=edge_points[ii,0],y=edge_points[ii,1],z=edge_points[ii,2]))
+        FL.allGeometry.append(cs.Spline(points=sp_temp_points, memberName = "edge",ID = (FL.fileMetadata.maxID+1)))
         FL.fileMetadata.maxID += 1
         
         spline_refs = []
@@ -343,9 +344,9 @@ def CLF(self):
             #pickr corresponding point matrix
             mx = mat_list[i]
             for ii, pt in enumerate(mx[:,0]):
-                sp_temp_points.append(CompositeStandard.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
+                sp_temp_points.append(cs.Point(x=mx[ii,0],y=mx[ii,1],z=mx[ii,2]))
 
-            FL.allGeometry.append(CompositeStandard.Spline(points=sp_temp_points, memberName = spl,ID = (FL.fileMetadata.maxID+1),breaks=breaks))
+            FL.allGeometry.append(cs.Spline(points=sp_temp_points, memberName = spl,ID = (FL.fileMetadata.maxID+1),breaks=breaks))
             FL.fileMetadata.maxID += 1
             spline_refs.append(spl)
 
@@ -356,7 +357,7 @@ def CLF(self):
         seq = seq.split("[")[1]
         seq = seq.split("]")[0]
 
-        FL.allComposite.append(CompositeStandard.Sequence(ID = (FL.fileMetadata.maxID+1)))
+        FL.allComposite.append(cs.Sequence(ID = (FL.fileMetadata.maxID+1)))
         FL.fileMetadata.maxID += 1
         #initiate material database 
         if FL.allMaterials == None:
@@ -398,26 +399,26 @@ def CLF(self):
 
             #To turn name refs into number refs
             for spline in FL.allGeometry:
-                if type(spline) == type(CompositeStandard.Spline()):
+                if type(spline) == type(cs.Spline()):
                     if spline.memberName == d_ref:
                         ID_ref = spline.ID
 
 
-            pic = CompositeStandard.Piece(splineRelimitationRef = ID_ref,ID = (FL.fileMetadata.maxID+1))
+            pic = cs.Piece(splineRelimitationRef = ID_ref,ID = (FL.fileMetadata.maxID+1))
             FL.fileMetadata.maxID += 1
 
             #create piece delimited by correct spline 
-            
-            refG.subComponents.append(CompositeStandard.Ply(orientation=s,material=mat,cutPieces=[pic],ID = (FL.fileMetadata.maxID+1),splineRelimitationRef = ID_ref))
-            FL.fileMetadata.maxID += 1
-            #store material
-            #print("stored mat",stored_mat)
+            #CORE adjusted
             if mat not in stored_mat:
                 mat_found = False
                 for m in matDatabase:
-                    print(m.materialName,mat)
-                    if mat == m.materialName:
+                    #print(m.memberName,mat)
+                    if mat == m.memberName:
+                        #Add ID as material is being used
+                        m.ID = FL.fileMetadata.maxID+1
                         FL.allMaterials.append(m)
+                        FL.fileMetadata.maxID += 1
+                        
                         mat_found = True
                         break
 
@@ -430,6 +431,15 @@ def CLF(self):
 
                 #preventing re-storing of material
                 stored_mat.append(mat)
+
+            else:
+                #make sure correct material is stored in m, if it has already been discovered and save
+                for anyM in FL.allMaterials:
+                    if anyM.memberName ==mat:
+                        m = anyM
+
+            refG.subComponents.append(cs.Ply(orientation=s,material=m,cutPieces=[pic],ID = (FL.fileMetadata.maxID+1),splineRelimitationRef = ID_ref))
+            FL.fileMetadata.maxID += 1
 
         
 
