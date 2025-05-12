@@ -14,3 +14,5 @@ Versions
 4.1 Re-introduced multi-material, this time through list of materials for current layup, in .csv. 
 
 4.2 CompoST being used as the storage for LD file, but also for the material database input. https://github.com/National-Composites-Centre/CompoST
+
+0.5.0 Transitioned to standard Pythonic version system, implementing bumpversion for easy version tracking.

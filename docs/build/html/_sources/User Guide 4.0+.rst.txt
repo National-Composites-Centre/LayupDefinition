@@ -11,7 +11,7 @@ The layup definition (LD) user guide follows the numbering on Figure 2. Red boxe
 	
 		Currently full packaged executable is not available for external users. Therefore cloning of this library is required.
 		
-		Then user can then run python script layup_definition.py in their local Python installation. For simplcity backup_env.yml should be used to build local Python environment.
+		Then user can then run python script layup_definition.py in their local Python installation. For simplcity LD.yml should be used to build local Python environment. This will likely not work for CompoST which will need to be installed with specific command available at https://national-composites-centre.github.io/CompoST/UsingCompost.html#installation .
 		
 		Alternatively, user can generate .exe file from layup_definitin.py after library has been cloned and environment was set-up. This can be done by for example library called pyinstaller. This will allow the user to follow the steps below for NCC user and integrate this tool with CATIA.
 	
