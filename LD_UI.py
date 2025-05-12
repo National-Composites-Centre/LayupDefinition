@@ -24,7 +24,7 @@ from kivy.base import runTouchApp
 
 from kivy.uix.checkbox import CheckBox
 
-from LayupDefinition.layup_definition import AddMat, sp1, sp2, CLF, MatSel
+from layup_definition import AddMat, sp1, sp2, CLF, MatSel
 
 import os
 
@@ -39,7 +39,7 @@ from kivy.factory import Factory
 from kivy.properties import ObjectProperty
 
 from kivy.uix.boxlayout import BoxLayout
-from LayupDefinition.utilities import TK_FS
+from utilities import TK_FS
 from functools import partial
 
 
@@ -57,7 +57,7 @@ class LayupDefinitionApp(App):
     Window.size = (500, 800)
     
     def build(self):
-        version = "4.2" #3+ is after Kivy transition
+        version = "0.5.0" #3+ is after Kivy transition
         TITLE = 'Layup Definition '+str(version)
 
         Window.set_title(TITLE)

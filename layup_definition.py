@@ -6,12 +6,12 @@ import win32com.client.dynamic
 import numpy as np
 import sys
 np.set_printoptions(threshold=sys.maxsize) #for troubleshooting only
-from LayupDefinition.vecEX3 import wrmmm
+from vecEX3 import wrmmm
 #BEING REPLACED #import PySimpleGUI as sg
 import os
 from datetime import date
 import math
-from LayupDefinition.utilities import sharpness , clean_json , MatSel
+from utilities import sharpness , clean_json , MatSel
 
 #from secondary_UIs import newMat #currently unused cleanup - because of parameter passing issues between UI's in differnt scripts
 #from utilities import sharpness
@@ -412,7 +412,7 @@ def CLF(self):
             if mat not in stored_mat:
                 mat_found = False
                 for m in matDatabase:
-                    print(m.memberName,mat)
+                    #print(m.memberName,mat)
                     if mat == m.memberName:
                         #Add ID as material is being used
                         m.ID = FL.fileMetadata.maxID+1
