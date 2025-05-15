@@ -115,7 +115,7 @@ def TK_FS(self):
         title='Select a file...',
         filetypes=filetypes,
     )
-    self.layout.children[66].text = filename
+    self.layout.children[69].text = filename
 
 
     mat_list = MatSel(self.location.text)

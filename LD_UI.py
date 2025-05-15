@@ -54,7 +54,7 @@ def on_checkbox_active(checkbox, value):
 
 
 class LayupDefinitionApp(App):
-    Window.size = (500, 800)
+    Window.size = (500, 830)
     
     def build(self):
         version = "0.5.1" #3+ is after Kivy transition
@@ -140,6 +140,8 @@ class LayupDefinitionApp(App):
         # create a big main button
 
             mb1 = Button(text=mat_list[0],on_press=self.sm)
+
+
         mb1.bind(on_release=self.dd1.open)
         # assign the data to the button text.
         self.dd1.bind(on_select=lambda instance, x: setattr(mb1, 'text', x))
@@ -150,6 +152,15 @@ class LayupDefinitionApp(App):
         self.cb3 = CheckBox(active = False,on_press=self.cb_sync_3)  
         self.layout.add_widget(self.cb3)
         self.layout.add_widget(Label(text=''))  #adjust button functionality
+
+        #row4.75 
+        
+        self.cb15 = CheckBox(active = False,on_press=self.cb_sync_15)  
+        self.layout.add_widget(self.cb15)
+        self.layout.add_widget(Label(text='<= Mandrel | Basic tool =>'))
+        self.cb16 = CheckBox(active = False,on_press=self.cb_sync_16)  
+        self.layout.add_widget(self.cb16)
+     
 
         #row5
         self.layout.add_widget(Button(text='Stacking direction', on_press=AddMat)) #CHANGE FUNCTION
@@ -237,6 +248,18 @@ class LayupDefinitionApp(App):
             self.cb2.active = True
             
         return(self) 
+    
+    def cb_sync_15(self,obj):
+        if self.cb15.active == True:
+            self.cb16.active = False
+        if self.cb15.active == False:
+            self.cb16.active = True
+
+    def cb_sync_16(self,obj):
+        if self.cb16.active == True:
+            self.cb15.active = False
+        if self.cb16.active == False:
+            self.cb15.active = True
     
     def sm(self,obj):
         self.cb2.active = True
